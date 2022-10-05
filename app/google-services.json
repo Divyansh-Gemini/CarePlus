@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "8237631751",
+    "project_id": "oldeage",
+    "storage_bucket": "oldeage.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:8237631751:android:439f33b750a008c0d29da2",
+        "android_client_info": {
+          "package_name": "com.yashverma.oldeage"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "8237631751-e460747l3b39vnh8k0csg29b1lvrmh8f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCAUnok_6-VPfAxWzbOHyRJsjstFML1_vg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "8237631751-e460747l3b39vnh8k0csg29b1lvrmh8f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
