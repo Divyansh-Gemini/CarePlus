@@ -16,20 +16,27 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Singnup extends AppCompatActivity {
-    EditText Email_Login, Password,conFirmPAssword;
+    EditText Email_Login, Password,conFirmPAssword,Name,Gender,Number,Age;
     Button Register;
     TextView t1;
     String emailPAttern="[a-zA-Z0-9._]+@[a-z]+\\.+[a-z]+";
     ProgressDialog progressDialog;
     FirebaseAuth OldAuth;
     FirebaseUser OldUser;
-
+    FirebaseFirestore FStore;
+    String userid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +46,11 @@ public class Singnup extends AppCompatActivity {
         conFirmPAssword=findViewById(R.id.ConfirmPAssword);
         Register=findViewById(R.id.Login);
         t1=findViewById(R.id.singin);
+        Name=findViewById(R.id.NameUser);
+        Gender=findViewById(R.id.UserGender);
+        Number=findViewById(R.id.NumberUser);
+        Age=findViewById(R.id.AgeUser);
+        FStore=FirebaseFirestore.getInstance();
         t1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -62,6 +74,10 @@ public class Singnup extends AppCompatActivity {
         String eamil=Email_Login.getText().toString();
         String pass=Password.getText().toString();
         String confirmPass=conFirmPAssword.getText().toString();
+        String name=Name.getText().toString();
+        String gender=Gender.getText().toString();
+        String number=Number.getText().toString();
+        String age=Age.getText().toString();
         if(!eamil.matches(emailPAttern))
         {
             Email_Login.setError("Enter Correct Email");
@@ -86,6 +102,20 @@ public class Singnup extends AppCompatActivity {
                     if(task.isSuccessful())
                     {
                         progressDialog.dismiss();
+                        userid=OldAuth.getCurrentUser().getUid();
+                        DocumentReference documentReference=FStore.collection("Users").document(userid);
+                        Map<String,Object> user = new HashMap<>();
+                        user.put("Name",name);
+                        user.put("Gender",gender);
+                        user.put("Number",number);
+                        user.put("age",age);
+                        user.put("EmailID",eamil);
+                        documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                Toast.makeText(Singnup.this, "Registered to firebase successfully", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                         sendUsertoNextActivity();
                         Toast.makeText(Singnup.this, "Registration SuccessFull", Toast.LENGTH_SHORT).show();
                     }
