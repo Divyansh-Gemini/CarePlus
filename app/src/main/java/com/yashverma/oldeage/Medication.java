@@ -2,7 +2,10 @@ package com.yashverma.oldeage;
 
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +18,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class Medication extends Fragment {
 EditText m1,m2,m3,m4,m5,m6,m7,m8,m9;
-Button btn3;
+Button btn3,btn4;
 FirebaseDatabase rootNote3;
 DatabaseReference reference3;
     @Override
@@ -26,7 +29,7 @@ DatabaseReference reference3;
         Bundle b=getArguments();
         String GuestId=b.getString("Guest_Id");
         m1=myview.findViewById(R.id.medication_id);
-        m2=myview.findViewById(R.id.Guest_id);
+        m2=myview.findViewById(R.id.guest_id);
         m2.setText(GuestId);
         m3=myview.findViewById(R.id.medicine_id);
         m4=myview.findViewById(R.id.Schedule);
@@ -36,7 +39,7 @@ DatabaseReference reference3;
         m8=myview.findViewById(R.id.Remarks);
         m9=myview.findViewById(R.id.Cause_disease_reason);
         btn3=myview.findViewById(R.id.Button3);
-
+        btn4=myview.findViewById(R.id.Medicine_Button);
         btn3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -56,7 +59,22 @@ DatabaseReference reference3;
                 reference3.child(Medication_id).setValue(medicationHelper);
             }
         });
-
+    btn4.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            String MEdicineId=m3.getText().toString();
+            Medicine medicineID= new Medicine();
+            Bundle b=new Bundle();
+            b.putString("Medicne_Id",MEdicineId);
+            medicineID.setArguments(b);
+            medicineID.setArguments(b);
+            FragmentManager fm=getFragmentManager();
+            FragmentTransaction ft=fm.beginTransaction();
+            ft.replace(R.id.Blank,medicineID);
+            ft.commit();
+        }
+    });
         return myview;
     }
-}
+
+};

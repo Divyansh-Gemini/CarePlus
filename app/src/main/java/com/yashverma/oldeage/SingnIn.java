@@ -34,6 +34,11 @@ public class SingnIn extends AppCompatActivity {
     private static final String key_Pass="Password";
 
     @Override
+    public void onBackPressed() {
+
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_singn_in);
@@ -70,6 +75,7 @@ public class SingnIn extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
     }
 
     private void PerformAuthentication() {

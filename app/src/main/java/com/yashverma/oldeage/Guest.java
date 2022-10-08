@@ -2,10 +2,12 @@ package com.yashverma.oldeage;
 
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class Guest extends Fragment {
     EditText eg1,eg2,eg3,eg4,eg5,eg6,eg7,eg8;
-    Button btn,medication;
+    Button btn,medication,hospitalization;
     FirebaseDatabase rootNote2;
     DatabaseReference reference2;
     @Override
@@ -26,11 +28,8 @@ public class Guest extends Fragment {
         // Inflate the layout for this fragment
         View myView=inflater.inflate(R.layout.fragment_guest, container, false);
 
-        Bundle b= this.getArguments();
-        String name=b.getString("Name");
-        eg1=myView.findViewById(R.id.Guest_id);
+        eg1=myView.findViewById(R.id.guest_id);
         eg2=myView.findViewById(R.id.Guest_name);
-        eg2.setText(name);
         eg3=myView.findViewById(R.id.Guest_nage);
         eg4=myView.findViewById(R.id.Guestdateofadmit);
         eg5=myView.findViewById(R.id.Guest_address);
@@ -39,6 +38,7 @@ public class Guest extends Fragment {
         eg8=myView.findViewById(R.id.cakertaker_id);
         btn=myView.findViewById(R.id.Button3);
         medication=myView.findViewById(R.id.Medication);
+        hospitalization=myView.findViewById(R.id.HospitalizationButton);
        btn.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
@@ -67,10 +67,24 @@ public class Guest extends Fragment {
                MedicationID.setArguments(b);
                FragmentManager fm=getFragmentManager();
                FragmentTransaction ft=fm.beginTransaction();
-               ft.replace(R.id.mainpage,MedicationID);
-               ft.addToBackStack("");
+               ft.replace(R.id.Blank,MedicationID);
+               ft.addToBackStack(" ");
                ft.commit();
-
+           }
+       });
+       hospitalization.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
+               String GuId=eg1.getText().toString();
+               hospitalisation Hospitalization= new hospitalisation();
+               Bundle b= new Bundle();
+               b.putString("Guest_Id",GuId);
+               Hospitalization.setArguments(b);
+               FragmentManager fm=getFragmentManager();
+               FragmentTransaction ft=fm.beginTransaction();
+               ft.replace(R.id.Blank,Hospitalization);
+               ft.addToBackStack(" ");
+               ft.commit();
 
            }
        });

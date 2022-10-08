@@ -7,11 +7,14 @@
         <entry key="..\:/Users/DELL/AndroidStudioProjects/OldeAge/app/src/main/res/layout/activity_hospitalize.xml" value="0.25" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/OldeAge/app/src/main/res/layout/activity_main.xml" value="0.2" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/OldeAge/app/src/main/res/layout/activity_singn_in.xml" value="0.22407407407407406" />
-        <entry key="..\:/Users/DELL/AndroidStudioProjects/OldeAge/app/src/main/res/layout/activity_singnup.xml" value="0.1" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/OldeAge/app/src/main/res/layout/activity_singnup.xml" value="0.264" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/OldeAge/app/src/main/res/layout/fragment_guest.xml" value="0.264" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/OldeAge/app/src/main/res/layout/fragment_hospital.xml" value="0.264" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/OldeAge/app/src/main/res/layout/fragment_hospitalisation.xml" value="0.25" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/OldeAge/app/src/main/res/layout/fragment_hospitalisation2.xml" value="0.4" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/OldeAge/app/src/main/res/layout/fragment_login_register.xml" value="0.2359375" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/OldeAge/app/src/main/res/layout/fragment_medication.xml" value="0.264" />
-        <entry key="..\:/Users/DELL/AndroidStudioProjects/OldeAge/app/src/main/res/layout/fragment_medicine.xml" value="0.1" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/OldeAge/app/src/main/res/layout/fragment_medicine.xml" value="0.264" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/OldeAge/app/src/main/res/layout/fragment_singup.xml" value="0.20833333333333334" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/OldeAge/app/src/main/res/layout/fragment_user_info.xml" value="0.25" />
       </map>

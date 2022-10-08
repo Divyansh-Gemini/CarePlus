@@ -15,7 +15,8 @@ public class Blank extends AppCompatActivity {
         setContentView(R.layout.activity_blank);
         FragmentManager fm=getSupportFragmentManager();
         FragmentTransaction ft=fm.beginTransaction();
-        ft.add(R.id.Blank,new UserInfo());
+        ft.add(R.id.Blank,new Guest());
         ft.commit();
     }
+
 }
