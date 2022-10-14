@@ -1,10 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Hospital">
 
 
+    <EditText
+        android:id="@+id/hospital_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:ems="10"
+        android:hint="Hospital_Id"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</FrameLayout>
+    <EditText
+        android:id="@+id/Hospital_Number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:ems="10"
+        android:hint="Hospital_number"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="@+id/Hospital_name"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/Hospital_name"
+        app:layout_constraintTop_toBottomOf="@+id/Hospital_name" />
+
+    <EditText
+        android:id="@+id/Hospital_Email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:ems="10"
+        android:hint="Hospital_email"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="@+id/Hospital_Number"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/Hospital_Number"
+        app:layout_constraintTop_toBottomOf="@+id/Hospital_Number" />
+
+    <Button
+        android:id="@+id/HOspital_InfoAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="Add_HospitalInfo"
+        app:layout_constraintEnd_toEndOf="@+id/Hospital_Addres"
+        app:layout_constraintHorizontal_bias="0.481"
+        app:layout_constraintStart_toStartOf="@+id/Hospital_Addres"
+        app:layout_constraintTop_toBottomOf="@+id/Hospital_Addres" />
+
+    <EditText
+        android:id="@+id/Hospital_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:ems="10"
+        android:hint="Hospital_name"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="@+id/hospital_id"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/hospital_id"
+        app:layout_constraintTop_toBottomOf="@+id/hospital_id" />
+
+    <EditText
+        android:id="@+id/Hospital_Addres"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:ems="10"
+        android:hint="Hospital_address"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="@+id/Hospital_Email"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/Hospital_Email"
+        app:layout_constraintTop_toBottomOf="@+id/Hospital_Email" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

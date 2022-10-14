@@ -24,14 +24,14 @@ DatabaseReference reference4;
         // Inflate the layout for this fragment
         View myView=inflater.inflate(R.layout.fragment_medicine, container, false);
         Bundle b=getArguments();
-        String MEdicineId=b.getString("Med_Id");
-        M1=myView.findViewById(R.id.Medicine_id);
+        String MEdicineId=b.getString("Medicne_Id");
+        M1=myView.findViewById(R.id.Hospital_name);
         M1.setText(MEdicineId);
-        M2=myView.findViewById(R.id.Medicine_Name);
-        M3=myView.findViewById(R.id.Medicine_Company);
-        M4=myView.findViewById(R.id.Medicine_Type);
-        M5=myView.findViewById(R.id.Medicine_Stock_Count);
-        AddM=myView.findViewById(R.id.Medicine_Info_Add);
+        M2=myView.findViewById(R.id.Hospital_Number);
+        M3=myView.findViewById(R.id.hospital_id);
+        M4=myView.findViewById(R.id.Hospital_Email);
+        M5=myView.findViewById(R.id.Hospital_Addres);
+        AddM=myView.findViewById(R.id.HOspital_InfoAdd);
         AddM.setOnClickListener(new View.OnClickListener() {
 
 

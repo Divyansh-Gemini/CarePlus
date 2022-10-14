@@ -3,6 +3,7 @@ package com.yashverma.oldeage;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -13,7 +14,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -53,8 +57,19 @@ public class Guest extends Fragment {
                String Guest_Known_Number=eg7.getText().toString();
                String CareTaker_id=eg8.getText().toString();
                GuestHelper Ghelper=new GuestHelper(Guest_id,Guest_name,Guest_age,Guest_date_of_Joining,Guest_Address,Guest_Known_Name,Guest_Known_Number,CareTaker_id);
-               reference2.child(Guest_Known_Number).setValue(Ghelper);
-               //reference2.push().setValue(Guest_id);
+               reference2.child(Guest_Known_Number).setValue(Ghelper).addOnSuccessListener(new OnSuccessListener<Void>() {
+                   @Override
+                   public void onSuccess(Void unused) {
+                       Toast.makeText(getActivity(), "Guest Data Saved", Toast.LENGTH_SHORT).show();
+
+                   }
+               }).addOnFailureListener(new OnFailureListener() {
+                   @Override
+                   public void onFailure(@NonNull Exception e) {
+                       Toast.makeText(getActivity(), "Guest is Not Saved"+e.getMessage(), Toast.LENGTH_SHORT).show();
+                   }
+               });
+               reference2.push().setValue(Guest_id);
            }
        });
        medication.setOnClickListener(new View.OnClickListener() {

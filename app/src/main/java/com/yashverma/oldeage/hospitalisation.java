@@ -10,13 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EdgeEffect;
 import android.widget.EditText;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import org.checkerframework.checker.units.qual.A;
 
 public class hospitalisation extends Fragment {
 EditText Hplisation_Id,Guest_id,Hp_Id,admit_date,Discharge_Date,treatment;
@@ -38,7 +35,7 @@ DatabaseReference reference5;
     admit_date=myview6.findViewById(R.id.Admit_date);
     Discharge_Date=myview6.findViewById(R.id.Discharge_Date);
     treatment=myview6.findViewById(R.id.Treatement);
-    Add=myview6.findViewById(R.id.Medicine_Info_Add);
+    Add=myview6.findViewById(R.id.HOspital_InfoAdd);
     Medicine=myview6.findViewById(R.id.HospitaleDetails);
     Add.setOnClickListener(new View.OnClickListener() {
         @Override
