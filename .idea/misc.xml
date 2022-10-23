@@ -4,19 +4,29 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/DELL/AndroidStudioProjects/OldeAge/app/src/main/res/layout/activity_blank.xml" value="0.22407407407407406" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/OldeAge/app/src/main/res/layout/activity_blank2.xml" value="0.10989583333333333" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/OldeAge/app/src/main/res/layout/activity_blank_details.xml" value="0.2359375" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/OldeAge/app/src/main/res/layout/activity_blank_update.xml" value="0.25" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/OldeAge/app/src/main/res/layout/activity_guest_data.xml" value="0.176" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/OldeAge/app/src/main/res/layout/activity_guest_details.xml" value="0.25" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/OldeAge/app/src/main/res/layout/activity_hospitalize.xml" value="0.25" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/OldeAge/app/src/main/res/layout/activity_main.xml" value="0.2" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/OldeAge/app/src/main/res/layout/activity_singn_in.xml" value="0.22407407407407406" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/OldeAge/app/src/main/res/layout/activity_singnup.xml" value="0.264" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/OldeAge/app/src/main/res/layout/fragment_guest.xml" value="0.264" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/OldeAge/app/src/main/res/layout/fragment_guest_d_etails.xml" value="0.2359375" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/OldeAge/app/src/main/res/layout/fragment_guest_details.xml" value="0.19166666666666668" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/OldeAge/app/src/main/res/layout/fragment_hospital.xml" value="0.264" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/OldeAge/app/src/main/res/layout/fragment_hospitalisation.xml" value="0.25" />
-        <entry key="..\:/Users/DELL/AndroidStudioProjects/OldeAge/app/src/main/res/layout/fragment_hospitalisation2.xml" value="0.4" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/OldeAge/app/src/main/res/layout/fragment_hospitalisation2.xml" value="0.2" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/OldeAge/app/src/main/res/layout/fragment_login_register.xml" value="0.2359375" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/OldeAge/app/src/main/res/layout/fragment_m_e_d_i_c_i_n_e.xml" value="0.24895833333333334" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/OldeAge/app/src/main/res/layout/fragment_medication.xml" value="0.264" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/OldeAge/app/src/main/res/layout/fragment_medicin.xml" value="0.25" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/OldeAge/app/src/main/res/layout/fragment_medicine.xml" value="0.264" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/OldeAge/app/src/main/res/layout/fragment_singup.xml" value="0.20833333333333334" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/OldeAge/app/src/main/res/layout/fragment_user_info.xml" value="0.25" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/OldeAge/app/src/main/res/layout/guestcard.xml" value="0.536" />
       </map>
     </option>
   </component>

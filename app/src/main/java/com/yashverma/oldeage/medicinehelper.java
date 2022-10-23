@@ -3,7 +3,7 @@ package com.yashverma.oldeage;
 public class medicinehelper {
     String medicine_id,medicine_name,medicine_type,medicine_stock_count;
 
-    public medicinehelper(String med_Id, String med_name, String med_Company, String med_Type, String med_stock_count) {
+    public medicinehelper(String med_id, String med_name, String med_company, String med_Type, String med_Stock) {
     }
 
     public medicinehelper(String medicine_id, String medicine_name, String medicine_type, String medicine_stock_count) {

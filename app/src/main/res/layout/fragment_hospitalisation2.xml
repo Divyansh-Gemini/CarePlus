@@ -88,7 +88,7 @@
         app:layout_constraintTop_toBottomOf="@+id/Hospital_id" />
 
     <Button
-        android:id="@+id/HOspital_InfoAdd"
+        android:id="@+id/h0spital_InfoAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="28dp"
@@ -107,7 +107,7 @@
         android:text="Hospital_Details"
         app:layout_constraintEnd_toEndOf="@+id/Treatement"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/HOspital_InfoAdd"
+        app:layout_constraintStart_toEndOf="@+id/h0spital_InfoAdd"
         app:layout_constraintTop_toBottomOf="@+id/Treatement" />
 
 

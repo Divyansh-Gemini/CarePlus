@@ -2,7 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.yashverma.oldeage">
-    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -14,7 +16,16 @@
         android:theme="@style/Theme.OldeAge"
         tools:targetApi="31">
         <activity
+            android:name=".BlankUpdate"
+            android:exported="false" />
+        <activity
             android:name=".Blank"
+            android:exported="false" />
+        <activity
+            android:name=".FullDetails.Blank2"
+            android:exported="false" />
+        <activity
+            android:name=".GuestData"
             android:exported="false" />
         <activity
             android:name=".Singnup"
