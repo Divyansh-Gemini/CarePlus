@@ -21,6 +21,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Locale;
+
 public class Guest extends Fragment {
     EditText eg1,eg2,eg3,eg4,eg5,eg6,eg7,eg8;
     Button btn,medication,hospitalization;
@@ -43,11 +45,11 @@ public class Guest extends Fragment {
         btn=myView.findViewById(R.id.Button3);
         medication=myView.findViewById(R.id.Medication);
         hospitalization=myView.findViewById(R.id.HospitalizationButton);
+        rootNote2=FirebaseDatabase.getInstance();
+        reference2=rootNote2.getReference("Guest Info");
        btn.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
-               rootNote2=FirebaseDatabase.getInstance();
-               reference2=rootNote2.getReference("Guest Info");
                String Guest_id=eg1.getText().toString();
                String Guest_name=eg2.getText().toString();
                String Guest_age=eg3.getText().toString();
@@ -56,8 +58,9 @@ public class Guest extends Fragment {
                String Guest_Known_Name=eg6.getText().toString();
                String Guest_Known_Number=eg7.getText().toString();
                String CareTaker_id=eg8.getText().toString();
-               GuestHelper Ghelper=new GuestHelper(Guest_id,Guest_name,Guest_age,Guest_date_of_Joining,Guest_Address,Guest_Known_Name,Guest_Known_Number,CareTaker_id);
-               reference2.child(Guest_Known_Number).setValue(Ghelper).addOnSuccessListener(new OnSuccessListener<Void>() {
+//                  reference2.push().getKey();
+               GuestHelper Ghelper=new GuestHelper(Guest_id,Guest_name.toUpperCase(),Guest_age,Guest_date_of_Joining,Guest_Address,Guest_Known_Name,Guest_Known_Number,CareTaker_id);
+               reference2.child(Guest_id).setValue(Ghelper).addOnSuccessListener(new OnSuccessListener<Void>() {
                    @Override
                    public void onSuccess(Void unused) {
                        Toast.makeText(getActivity(), "Guest Data Saved", Toast.LENGTH_SHORT).show();
@@ -69,7 +72,7 @@ public class Guest extends Fragment {
                        Toast.makeText(getActivity(), "Guest is Not Saved"+e.getMessage(), Toast.LENGTH_SHORT).show();
                    }
                });
-               reference2.push().setValue(Guest_id);
+
            }
        });
        medication.setOnClickListener(new View.OnClickListener() {

@@ -40,12 +40,12 @@ DatabaseReference reference3;
         m9=myview.findViewById(R.id.Cause_disease_reason);
         btn3=myview.findViewById(R.id.Button3);
         btn4=myview.findViewById(R.id.Medicine_Button);
+        rootNote3=FirebaseDatabase.getInstance();
+        reference3=rootNote3.getReference("Medication");
         btn3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //Code To Store The data In the Firebase
-                rootNote3=FirebaseDatabase.getInstance();
-                reference3=rootNote3.getReference("Medication");
                 String Medication_id=m1.getText().toString();
                 String Guest_Id=m2.getText().toString();
                 String Medicine_id=m3.getText().toString();
@@ -63,14 +63,14 @@ DatabaseReference reference3;
         @Override
         public void onClick(View view) {
             String MEdicineId=m3.getText().toString();
-            Medicine medicineID= new Medicine();
+            Medicin medicine= new Medicin();
             Bundle b=new Bundle();
             b.putString("Medicne_Id",MEdicineId);
-            medicineID.setArguments(b);
-            medicineID.setArguments(b);
+            medicine.setArguments(b);
+            medicine.setArguments(b);
             FragmentManager fm=getFragmentManager();
             FragmentTransaction ft=fm.beginTransaction();
-            ft.replace(R.id.Blank,medicineID);
+            ft.replace(R.id.Blank,medicine);
             ft.commit();
         }
     });

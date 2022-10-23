@@ -54,7 +54,7 @@ public class SingnIn extends AppCompatActivity {
             String name=shp.getString(Key_Email,null);
             if(name!=null)
             {
-                Intent I= new Intent(SingnIn.this,Blank.class);
+                Intent I= new Intent(SingnIn.this,GuestData.class);
                 startActivity(I);
             }
         Login.setOnClickListener(new View.OnClickListener() {
@@ -115,7 +115,7 @@ public class SingnIn extends AppCompatActivity {
 }
 
     private void sendUsertoNextActivity() {
-        Intent i= new Intent(SingnIn.this,Blank.class);
+        Intent i= new Intent(SingnIn.this,GuestData.class);
         i.setFlags(i.FLAG_ACTIVITY_CLEAR_TASK|i.FLAG_ACTIVITY_NEW_TASK);//USed Not to Show Again Once user is Logined
         startActivity(i);
 

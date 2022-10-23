@@ -35,13 +35,13 @@ DatabaseReference reference5;
     admit_date=myview6.findViewById(R.id.Admit_date);
     Discharge_Date=myview6.findViewById(R.id.Discharge_Date);
     treatment=myview6.findViewById(R.id.Treatement);
-    Add=myview6.findViewById(R.id.HOspital_InfoAdd);
+    Add=myview6.findViewById(R.id.h0spital_InfoAdd);
+    rootnote5=FirebaseDatabase.getInstance();
+    reference5=rootnote5.getReference("Hospitalization");
     Medicine=myview6.findViewById(R.id.HospitaleDetails);
     Add.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            rootnote5=FirebaseDatabase.getInstance();
-            reference5=rootnote5.getReference("Hospitalization");
             String Hospitalization_Id=Hplisation_Id.getText().toString();
             String Guest_Id=Guest_id.getText().toString();
             String AdmitDate=admit_date.getText().toString();
