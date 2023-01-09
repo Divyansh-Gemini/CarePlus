@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/icon_home"
+            android:title="@string/menu_home" />
+
+        <item
+            android:id="@+id/nav_guests"
+            android:icon="@drawable/icon_guests"
+            android:title="@string/menu_guests" />
+
+        <item
+            android:id="@+id/nav_medicines"
+            android:icon="@drawable/icon_medicines"
+            android:title="@string/menu_medicines" />
+
+        <item
+            android:id="@+id/nav_hospitals"
+            android:icon="@drawable/icon_hospital"
+            android:title="@string/menu_hospitals" />
+
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/icon_settings"
+            android:title="@string/menu_settings" />
+
+        <item
+            android:id="@+id/nav_help_and_feedback"
+            android:icon="@drawable/icon_help_and_feedback"
+            android:title="@string/menu_help_and_feedback" />
+
+        <item
+            android:id="@+id/nav_about"
+            android:icon="@drawable/icon_about"
+            android:title="@string/menu_about" />
+    </group>
+</menu>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.careplus.medtracker.HomeFragment"
+        android:label="@string/app_name"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/nav_guests"
+        android:name="com.careplus.medtracker.GuestsFragment"
+        android:label="@string/menu_guests"
+        tools:layout="@layout/fragment_guests" />
+
+    <fragment
+        android:id="@+id/nav_medicines"
+        android:name="com.careplus.medtracker.MedicinesFragment"
+        android:label="@string/menu_medicines"
+        tools:layout="@layout/fragment_medicines" />
+
+    <fragment
+        android:id="@+id/nav_hospitals"
+        android:name="com.careplus.medtracker.HospitalsFragment"
+        android:label="@string/menu_hospitals"
+        tools:layout="@layout/fragment_hospitals" />
+
+    <fragment
+        android:id="@+id/nav_settings"
+        android:name="com.careplus.medtracker.SettingsFragment"
+        android:label="@string/menu_settings"
+        tools:layout="@layout/fragment_settings" />
+
+    <fragment
+        android:id="@+id/nav_help_and_feedback"
+        android:name="com.careplus.medtracker.HelpAndFeedbackFragment"
+        android:label="@string/menu_help_and_feedback"
+        tools:layout="@layout/fragment_help_and_feedback" />
+
+    <fragment
+        android:id="@+id/nav_about"
+        android:name="com.careplus.medtracker.AboutFragment"
+        android:label="@string/menu_about"
+        tools:layout="@layout/fragment_about" />
+
+</navigation>
