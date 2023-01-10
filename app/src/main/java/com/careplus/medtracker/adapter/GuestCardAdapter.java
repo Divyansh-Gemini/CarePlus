@@ -1,7 +1,10 @@
 package com.careplus.medtracker.adapter;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +20,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.careplus.medtracker.AddGuestActivity;
 import com.careplus.medtracker.R;
 import com.careplus.medtracker.model.Guest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -40,12 +49,18 @@ public class GuestCardAdapter extends RecyclerView.Adapter<GuestCardAdapter.Gues
         TextView textView1, textView2;
         ImageButton btn_edit, btn_more;
 
+        FirebaseDatabase firebaseDatabase;
+        DatabaseReference databaseReference;
+
         public GuestViewHolder(@NonNull View itemView) {
             super(itemView);
             textView1 = itemView.findViewById(R.id.textView1);
             textView2 = itemView.findViewById(R.id.textView2);
             btn_edit = itemView.findViewById(R.id.button1);
             btn_more = itemView.findViewById(R.id.button2);
+
+            firebaseDatabase = FirebaseDatabase.getInstance();
+            databaseReference = firebaseDatabase.getReference("Guest");
         }
     }
 
@@ -86,7 +101,21 @@ public class GuestCardAdapter extends RecyclerView.Adapter<GuestCardAdapter.Gues
                         {
                             //##################### Delete Button #####################
                             case R.id.item1:
-                                    Toast.makeText(context, "Unable to Delete!!", Toast.LENGTH_SHORT).show();
+                                Query query = holder.databaseReference.child("Guests").orderByChild("guestID").equalTo(guest.getGuestID());
+                                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        for (DataSnapshot childSnapshot: dataSnapshot.getChildren()) {
+                                            childSnapshot.getRef().removeValue();
+                                        }
+                                        Toast.makeText(context, "Guest deleted successfully", Toast.LENGTH_SHORT).show();
+                                    }
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+                                        Toast.makeText(context, "" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                                notifyDataSetChanged();
                                 break;
                         }
                         return false;

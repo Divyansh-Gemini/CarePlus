@@ -20,6 +20,12 @@ import com.careplus.medtracker.AddGuestActivity;
 import com.careplus.medtracker.AddMedicineActivity;
 import com.careplus.medtracker.R;
 import com.careplus.medtracker.model.Medicine;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -44,6 +50,9 @@ public class MedicineCardAdapter extends RecyclerView.Adapter<MedicineCardAdapte
         ImageView imageView;
         ImageButton btn_edit, btn_more;
 
+        FirebaseDatabase firebaseDatabase;
+        DatabaseReference databaseReference;
+
         public MedicineViewHolder(@NonNull View itemView) {
             super(itemView);
             textView1 = itemView.findViewById(R.id.textView1);
@@ -51,6 +60,9 @@ public class MedicineCardAdapter extends RecyclerView.Adapter<MedicineCardAdapte
             imageView = itemView.findViewById(R.id.imageView);
             btn_edit = itemView.findViewById(R.id.button1);
             btn_more = itemView.findViewById(R.id.button2);
+
+            firebaseDatabase = FirebaseDatabase.getInstance();
+            databaseReference = firebaseDatabase.getReference("Medicine");
         }
     }
 
@@ -92,7 +104,21 @@ public class MedicineCardAdapter extends RecyclerView.Adapter<MedicineCardAdapte
                         {
                             //##################### Delete Button #####################
                             case R.id.item1:
-                                Toast.makeText(context, "Unable to Delete!!", Toast.LENGTH_SHORT).show();
+                                Query query = holder.databaseReference.child("Medicines").orderByChild("medicineID").equalTo(medicine.getMedicineID());
+                                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        for (DataSnapshot childSnapshot: dataSnapshot.getChildren()) {
+                                            childSnapshot.getRef().removeValue();
+                                        }
+                                        Toast.makeText(context, "Medicine deleted successfully", Toast.LENGTH_SHORT).show();
+                                    }
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+                                        Toast.makeText(context, "" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                                notifyDataSetChanged();
                                 break;
                         }
                         return false;
