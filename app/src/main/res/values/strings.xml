@@ -49,14 +49,12 @@
     </string-array>
 
     <string-array name="BDA">
-        <item>--Select--</item>
         <item>Before</item>
         <item>During</item>
         <item>After</item>
     </string-array>
 
     <string-array name="meal">
-        <item>--Select--</item>
         <item>Breakfast</item>
         <item>Lunch</item>
         <item>Dinner</item>

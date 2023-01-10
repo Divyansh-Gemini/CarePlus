@@ -80,7 +80,6 @@
         <LinearLayout
             android:id="@+id/linearLayout"
             android:orientation="horizontal"
-            android:layout_marginTop="20sp"
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -88,18 +87,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView3">
 
-            <Spinner
-                android:id="@+id/spinner3"
-                android:background="@drawable/bg_spinner"
-                android:layout_marginHorizontal="10sp"
-                android:layout_width="135sp"
+            <NumberPicker
+                android:id="@+id/numberPicker1"
+                android:layout_marginHorizontal="20sp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
-            <Spinner
-                android:id="@+id/spinner4"
-                android:background="@drawable/bg_spinner"
-                android:layout_marginHorizontal="10sp"
-                android:layout_width="135sp"
+            <NumberPicker
+                android:id="@+id/numberPicker2"
+                android:layout_marginHorizontal="20sp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
         </LinearLayout>

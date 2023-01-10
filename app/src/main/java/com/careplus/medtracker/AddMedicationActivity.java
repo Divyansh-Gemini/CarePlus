@@ -8,12 +8,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
+import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,7 +29,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -39,7 +37,8 @@ import java.util.List;
 
 public class AddMedicationActivity extends AppCompatActivity {
     TextView textView1, textView2;
-    Spinner spinner1, spinner2, spinner3, spinner4;
+    Spinner spinner1, spinner2;
+    NumberPicker numberPicker1, numberPicker2;
     TextInputEditText editText1, editText2;
     MaterialButton btn;
     int start_yyyy, start_mm, start_dd, end_yyyy, end_mm, end_dd;
@@ -58,8 +57,8 @@ public class AddMedicationActivity extends AppCompatActivity {
         textView2 = findViewById(R.id.textView2);
         spinner1 = findViewById(R.id.spinner1);
         spinner2 = findViewById(R.id.spinner2);
-        spinner3 = findViewById(R.id.spinner3);
-        spinner4 = findViewById(R.id.spinner4);
+        numberPicker1 = findViewById(R.id.numberPicker1);
+        numberPicker2 = findViewById(R.id.numberPicker2);
         editText1 = findViewById(R.id.editText1);
         editText2 = findViewById(R.id.editText2);
         btn = findViewById(R.id.button);
@@ -117,15 +116,18 @@ public class AddMedicationActivity extends AppCompatActivity {
         });
         spinner2.setAdapter(adapter2);  // Linked spinner with ArrayAdapter
 
-        // ############### Setting values to Before-During-After Spinner ###############
+        // ############### Setting values to Before-During-After NumberPicker ###############
         final String[] bda = getResources().getStringArray(R.array.BDA);    // Created an Array
-        ArrayAdapter<String> adapter3 = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, bda);    // Linked ArrayAdapter with array
-        spinner3.setAdapter(adapter3);  // Linked spinner with ArrayAdapter
+        numberPicker1.setMinValue(0);
+        numberPicker1.setMaxValue(bda.length - 1);
+        numberPicker1.setDisplayedValues(bda);
 
-        // ############### Setting values to Meal Spinner ###############
+
+        // ############### Setting values to Meal NumberPicker ###############
         final String[] meal = getResources().getStringArray(R.array.meal);    // Created an Array
-        ArrayAdapter<String> adapter4 = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, meal);    // Linked ArrayAdapter with array
-        spinner4.setAdapter(adapter4);  // Linked spinner with ArrayAdapter
+        numberPicker2.setMinValue(0);
+        numberPicker2.setMaxValue(meal.length - 1);
+        numberPicker2.setDisplayedValues(meal);
 
         // Getting current date from Calendar class
         Calendar ca = Calendar.getInstance();
@@ -164,7 +166,8 @@ public class AddMedicationActivity extends AppCompatActivity {
             public void onClick(View v) {
                 int guest_id = guests_id_list.get(spinner1.getSelectedItemPosition());
                 int medicine_id = medicines_id_list.get(spinner2.getSelectedItemPosition());
-                String schedule = spinner3.getSelectedItem().toString() + spinner4.getSelectedItem().toString().trim();
+                String schedule = bda[numberPicker1.getValue()] + " " + meal[numberPicker2.getValue()];
+                Toast.makeText(AddMedicationActivity.this, "" + schedule, Toast.LENGTH_SHORT).show();
                 String start_date = editText1.getText().toString();
                 String end_date = editText2.getText().toString();
 
