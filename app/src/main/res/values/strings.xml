@@ -25,7 +25,7 @@
     <string name="new_guest">New guest</string>
 
     <string-array name="medicine_types">
-        <item>Select medicine type</item>
+        <item>--Select medicine type--</item>
         <item>Tablet</item>
         <item>Capsule</item>
         <item>Syrup</item>
@@ -37,7 +37,7 @@
     </string-array>
 
     <string-array name="medicine_quantities">
-        <item>units</item>
+        <item>--units--</item>
         <item>Tablets</item>
         <item>Capsules</item>
         <item>ml</item>
@@ -46,5 +46,19 @@
         <item>tubes</item>
         <item>gm</item>
         <item>units</item>
+    </string-array>
+
+    <string-array name="BDA">
+        <item>--Select--</item>
+        <item>Before</item>
+        <item>During</item>
+        <item>After</item>
+    </string-array>
+
+    <string-array name="meal">
+        <item>--Select--</item>
+        <item>Breakfast</item>
+        <item>Lunch</item>
+        <item>Dinner</item>
     </string-array>
 </resources>

@@ -67,7 +67,7 @@ public class GuestsFragment extends Fragment {
             // Displaying the error msg in the Toast if fetching data from Firebase is unsuccessful
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getActivity(),"" + error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(),"" + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 

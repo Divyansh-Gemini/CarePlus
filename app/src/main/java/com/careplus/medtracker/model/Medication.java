@@ -10,56 +10,40 @@ package com.careplus.medtracker.model;
 // #################################################################################################
 
 public class Medication {
-    int medicationID;
-    int guestID;
-    int medicineID;
-    String schedule;
-    String dose;
-    String startDate;
-    String endDate;
-    String remarks;
-    String Reason;
+    int hospitalization_id, guest_id, medicine_id;
+    String schedule, start_date, end_date;
 
-    // Default constructor
-    public Medication()
-    {   }
-
-    // Parameterized constructor
-    public Medication(int medicationID, int guestID, int medicineID, String schedule,
-                      String dose, String startDate, String endDate, String remarks, String reason) {
-        this.medicationID = medicationID;
-        this.guestID = guestID;
-        this.medicineID = medicineID;
+    public Medication(int hospitalization_id, int guest_id, int medicine_id, String schedule, String start_date, String end_date) {
+        this.hospitalization_id = hospitalization_id;
+        this.guest_id = guest_id;
+        this.medicine_id = medicine_id;
         this.schedule = schedule;
-        this.dose = dose;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.remarks = remarks;
-        Reason = reason;
+        this.start_date = start_date;
+        this.end_date = end_date;
     }
 
-    public int getMedicationID() {
-        return medicationID;
+    public int getHospitalization_id() {
+        return hospitalization_id;
     }
 
-    public void setMedicationID(int medicationID) {
-        this.medicationID = medicationID;
+    public void setHospitalization_id(int hospitalization_id) {
+        this.hospitalization_id = hospitalization_id;
     }
 
-    public int getGuestID() {
-        return guestID;
+    public int getGuest_id() {
+        return guest_id;
     }
 
-    public void setGuestID(int guestID) {
-        this.guestID = guestID;
+    public void setGuest_id(int guest_id) {
+        this.guest_id = guest_id;
     }
 
-    public int getMedicineID() {
-        return medicineID;
+    public int getMedicine_id() {
+        return medicine_id;
     }
 
-    public void setMedicineID(int medicineID) {
-        this.medicineID = medicineID;
+    public void setMedicine_id(int medicine_id) {
+        this.medicine_id = medicine_id;
     }
 
     public String getSchedule() {
@@ -70,43 +54,19 @@ public class Medication {
         this.schedule = schedule;
     }
 
-    public String getDose() {
-        return dose;
+    public String getStart_date() {
+        return start_date;
     }
 
-    public void setDose(String dose) {
-        this.dose = dose;
+    public void setStart_date(String start_date) {
+        this.start_date = start_date;
     }
 
-    public String getStartDate() {
-        return startDate;
+    public String getEnd_date() {
+        return end_date;
     }
 
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
-    }
-
-    public String getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
-    }
-
-    public String getRemarks() {
-        return remarks;
-    }
-
-    public void setRemarks(String remarks) {
-        this.remarks = remarks;
-    }
-
-    public String getReason() {
-        return Reason;
-    }
-
-    public void setReason(String reason) {
-        Reason = reason;
+    public void setEnd_date(String end_date) {
+        this.end_date = end_date;
     }
 }
