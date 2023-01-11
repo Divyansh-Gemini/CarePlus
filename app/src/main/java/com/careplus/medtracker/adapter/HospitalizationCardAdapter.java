@@ -15,9 +15,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.careplus.medtracker.AddMedicineActivity;
+import com.careplus.medtracker.AddHospitalActivity;
 import com.careplus.medtracker.R;
-import com.careplus.medtracker.model.Medicine;
+import com.careplus.medtracker.model.Hospital;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,17 +33,17 @@ import java.util.ArrayList;
 // Implementation "Edit" & "More" button is also here.
 // #################################################################################################
 
-public class MedicineCardAdapter extends RecyclerView.Adapter<MedicineCardAdapter.MedicineViewHolder> {
+public class HospitalizationCardAdapter extends RecyclerView.Adapter<HospitalizationCardAdapter.HospitalViewHolder> {
     Context context;
-    ArrayList<Medicine> medicine_list;
+    ArrayList<Hospital> hospital_list;
 
-    public MedicineCardAdapter(Context context, ArrayList<Medicine> medicine_list) {
+    public HospitalizationCardAdapter(Context context, ArrayList<Hospital> hospital_list) {
         this.context = context;
-        this.medicine_list = medicine_list;
+        this.hospital_list = hospital_list;
     }
 
-    // MedicineViewHolder is inner class & MedicineCardAdapter is outer class
-    public static class MedicineViewHolder extends RecyclerView.ViewHolder {
+    // HospitalViewHolder is inner class & HospitalCardAdapter is outer class
+    public static class HospitalViewHolder extends RecyclerView.ViewHolder {
         TextView textView1, textView2;
         ImageView imageView;
         ImageButton btn_edit, btn_more;
@@ -51,7 +51,7 @@ public class MedicineCardAdapter extends RecyclerView.Adapter<MedicineCardAdapte
         FirebaseDatabase firebaseDatabase;
         DatabaseReference databaseReference;
 
-        public MedicineViewHolder(@NonNull View itemView) {
+        public HospitalViewHolder(@NonNull View itemView) {
             super(itemView);
             textView1 = itemView.findViewById(R.id.textView1);
             textView2 = itemView.findViewById(R.id.textView2);
@@ -60,31 +60,31 @@ public class MedicineCardAdapter extends RecyclerView.Adapter<MedicineCardAdapte
             btn_more = itemView.findViewById(R.id.button2);
 
             firebaseDatabase = FirebaseDatabase.getInstance();
-            databaseReference = firebaseDatabase.getReference("Medicine");
+            databaseReference = firebaseDatabase.getReference("Hospital");
         }
     }
 
     @NonNull
     @Override
-    public MedicineCardAdapter.MedicineViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public HospitalizationCardAdapter.HospitalViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.custom_card, parent, false);
-        return new MedicineCardAdapter.MedicineViewHolder(view);
+        return new HospitalizationCardAdapter.HospitalViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MedicineCardAdapter.MedicineViewHolder holder, int position) {
-        Medicine medicine = medicine_list.get(position);
-        holder.textView1.setText(medicine.getMedicineName());
-        holder.textView2.setText(medicine.getMedicineCompany());
-        holder.imageView.setImageResource(R.drawable.image_medicine);
+    public void onBindViewHolder(@NonNull HospitalizationCardAdapter.HospitalViewHolder holder, int position) {
+        Hospital hospital = hospital_list.get(position);
+        holder.textView1.setText(hospital.getHospitalName());
+        holder.textView2.setText(hospital.getHospitalAddress());
+        holder.imageView.setImageResource(R.drawable.image_hospital);
 
         //##################### Edit Button #####################
         holder.btn_edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // On clicking "Edit", Going to AddGuestActivity using Intent
-                Intent i = new Intent(context, AddMedicineActivity.class);
-                i.putExtra("medicine_id", medicine.getMedicineID());         // Sending guest_id with intent
+                Intent i = new Intent(context, AddHospitalActivity.class);         // Sending guest_id with intent
+                i.putExtra("hospital_id", hospital.getHospitalID());
                 context.startActivity(i);
             }
         });
@@ -102,14 +102,14 @@ public class MedicineCardAdapter extends RecyclerView.Adapter<MedicineCardAdapte
                         {
                             //##################### Delete Button #####################
                             case R.id.item1:
-                                Query query = holder.databaseReference.child("Medicines").orderByChild("medicineID").equalTo(medicine.getMedicineID());
+                                Query query = holder.databaseReference.child("Hospitals").orderByChild("hospitalID").equalTo(hospital.getHospitalID());
                                 query.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         for (DataSnapshot childSnapshot: dataSnapshot.getChildren()) {
                                             childSnapshot.getRef().removeValue();
                                         }
-                                        Toast.makeText(context, "Medicine deleted successfully", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(context, "Hospital deleted successfully", Toast.LENGTH_SHORT).show();
                                     }
                                     @Override
                                     public void onCancelled(DatabaseError databaseError) {
@@ -129,6 +129,6 @@ public class MedicineCardAdapter extends RecyclerView.Adapter<MedicineCardAdapte
 
     @Override
     public int getItemCount() {
-        return medicine_list.size();
+        return hospital_list.size();
     }
 }

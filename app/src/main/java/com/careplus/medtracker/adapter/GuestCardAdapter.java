@@ -1,10 +1,7 @@
 package com.careplus.medtracker.adapter;
 
-import static android.content.ContentValues.TAG;
-
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -67,7 +64,7 @@ public class GuestCardAdapter extends RecyclerView.Adapter<GuestCardAdapter.Gues
     @NonNull
     @Override
     public GuestViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.card_guest, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.custom_card, parent, false);
         return new GuestViewHolder(view);
     }
 

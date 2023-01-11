@@ -15,10 +15,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.careplus.medtracker.AddGuestActivity;
 import com.careplus.medtracker.AddHospitalActivity;
 import com.careplus.medtracker.R;
-import com.careplus.medtracker.model.Guest;
 import com.careplus.medtracker.model.Hospital;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -69,7 +67,7 @@ public class HospitalCardAdapter extends RecyclerView.Adapter<HospitalCardAdapte
     @NonNull
     @Override
     public HospitalCardAdapter.HospitalViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.card_guest, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.custom_card, parent, false);
         return new HospitalCardAdapter.HospitalViewHolder(view);
     }
 

@@ -1,0 +1,87 @@
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Widget.Material3.CardView.Elevated"
+    app:cardBackgroundColor="@color/white"
+    android:clickable="true"
+    android:focusable="true"
+    app:cardCornerRadius="15sp"
+    android:layout_margin="10sp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/card"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="7sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:src="@drawable/old_man_avatar"
+            android:layout_width="100sp"
+            android:layout_height="100sp"/>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_marginLeft="10sp"
+            android:layout_width="match_parent"
+            android:layout_height="104sp">
+
+            <TextView
+                android:id="@+id/textView1"
+                android:text="Guest Name"
+                android:textSize="20sp"
+                android:layout_marginTop="5sp"
+                android:textColor="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/textView2"
+                android:text="Age &amp; Gender"
+                android:textSize="15sp"
+                android:layout_marginTop="5sp"
+                android:textColor="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/textView3"
+                android:text=""
+                android:textSize="15sp"
+                android:layout_marginTop="5sp"
+                android:textColor="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_gravity="end"
+                android:gravity="bottom"
+                android:layout_width="wrap_content"
+                android:layout_height="25sp">
+
+                <ImageButton
+                    android:id="@+id/button1"
+                    android:background="@drawable/icon_edit"
+                    android:layout_marginHorizontal="5sp"
+                    android:layout_width="25sp"
+                    android:layout_height="25sp"/>
+
+                <ImageButton
+                    android:id="@+id/button2"
+                    android:background="@drawable/icon_more"
+                    android:layout_marginHorizontal="5sp"
+                    android:layout_width="25sp"
+                    android:layout_height="25sp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>
