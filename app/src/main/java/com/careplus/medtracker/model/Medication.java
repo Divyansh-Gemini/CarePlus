@@ -9,17 +9,20 @@ package com.careplus.medtracker.model;
 //              - Isme (properties, default & parameterized constructor, getter & setter methods) hote h.
 // #################################################################################################
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Medication {
     int hospitalization_id, guest_id, medicine_id;
     String schedule, start_date, end_date;
+    List<String> dates= new ArrayList<String>();
 
-    public Medication(int hospitalization_id, int guest_id, int medicine_id, String schedule, String start_date, String end_date) {
+    public Medication(int hospitalization_id, int guest_id, int medicine_id, String schedule,ArrayList<String> dtes) {
         this.hospitalization_id = hospitalization_id;
         this.guest_id = guest_id;
         this.medicine_id = medicine_id;
         this.schedule = schedule;
-        this.start_date = start_date;
-        this.end_date = end_date;
+        dates=dtes;
     }
 
     public int getHospitalization_id() {
@@ -68,5 +71,13 @@ public class Medication {
 
     public void setEnd_date(String end_date) {
         this.end_date = end_date;
+    }
+
+    public List<String> getDates() {
+        return dates;
+    }
+
+    public void setDates(List<String> dates) {
+        this.dates = dates;
     }
 }
