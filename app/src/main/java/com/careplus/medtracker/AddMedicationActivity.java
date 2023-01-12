@@ -46,11 +46,12 @@ public class AddMedicationActivity extends AppCompatActivity {
     NumberPicker numberPicker1, numberPicker2;
     TextInputEditText editText1, editText2;
     MaterialButton btn;
-    int start_yyyy, start_mm, start_dd, end_yyyy, end_mm, end_dd;
+
     List<String> guests_name_list, medicines_name_list;
     List<Integer> guests_id_list, medicines_id_list;
     static final long ONE_DAY = 24 * 60 * 60 * 1000L;
     int medication_id;
+
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReferenceGuest, databaseReferenceMedicine, databaseReferenceMedication;
 
@@ -127,7 +128,6 @@ public class AddMedicationActivity extends AppCompatActivity {
         numberPicker1.setMaxValue(bda.length - 1);
         numberPicker1.setDisplayedValues(bda);
 
-
         // ############### Setting values to Meal NumberPicker ###############
         final String[] meal = getResources().getStringArray(R.array.meal);    // Created an Array
         numberPicker2.setMinValue(0);
@@ -137,27 +137,29 @@ public class AddMedicationActivity extends AppCompatActivity {
         // Getting current date from Calendar class
         Calendar ca = Calendar.getInstance();
         ca.clear();
-        long today= MaterialDatePicker.todayInUtcMilliseconds();
+
+        long today = MaterialDatePicker.todayInUtcMilliseconds();
         ca.setTimeInMillis(today);
+
         ca.set(Calendar.MONTH,Calendar.JANUARY);
-        long janurary=ca.getTimeInMillis();
+        long january = ca.getTimeInMillis();
+
         ca.set(Calendar.MONTH, Calendar.DECEMBER);
-        long December = ca.getTimeInMillis();
+        long december = ca.getTimeInMillis();
+
         CalendarConstraints.Builder constraints = new CalendarConstraints.Builder();
-        //Starting Month Add Karne ke liya hai ye
-        constraints.setStart(janurary);
-        //End Month Set Karne Ke liya Hai ye
-        constraints.setEnd(December);
-        //JAb Phele Bari Khuli toh Kya aega Oske liya hai ye
-        constraints.setOpenAt(today);
-        //Using Validator Jise ki Current Date ke peeche Vala Set na Kar Sake
-        constraints.setValidator(DateValidatorPointForward.now());
-        //material DatePicker
+        constraints.setStart(january);  // Setting starting month
+        constraints.setEnd(december);   // Setting end month
+        constraints.setOpenAt(today);   // Setting today's date when it will open first time
+        constraints.setValidator(DateValidatorPointForward.now());  // Setting validator so that previous dates cannot be selected
+
+        // Material Date Picker
         MaterialDatePicker.Builder builder = MaterialDatePicker.Builder.datePicker();
         builder.setTitleText("Set Date");
-        //builder.setSelection(today);//For Default Selection Means The Current Date Ke liya Hai
-        builder.setCalendarConstraints(constraints.build());//Setting the Constraints So that It can Not go beyond or below the End And Start Dates
+        //builder.setSelection(today);  // For default Selection means the current date ke liye hai
+        builder.setCalendarConstraints(constraints.build());    // Setting constraints so that it cannot go beyond or below the start and end dates
         final MaterialDatePicker mdp = builder.build();
+
         // Popping up DatePickerDialog on clicking editText1
         editText1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -165,17 +167,20 @@ public class AddMedicationActivity extends AppCompatActivity {
                 mdp.show(getSupportFragmentManager(), "Date Picker");
             }
         });
+
         mdp.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
             @Override
             public void onPositiveButtonClick(Object selection) {
                 editText1.setText(mdp.getHeaderText());
             }
         });
+
         MaterialDatePicker.Builder builder2 = MaterialDatePicker.Builder.datePicker();
         builder2.setTitleText("Set Date");
-        //builder.setSelection(today);//For Default Selection Means The Current Date Ke liya Hai
-        builder.setCalendarConstraints(constraints.build());//Setting the Constraints So that It can Not go beyond or below the End And Start Dates
+        //builder.setSelection(today);  // For default Selection means the current date ke liye hai
+        builder.setCalendarConstraints(constraints.build());    // Setting constraints so that it cannot go beyond or below the start and end dates
         final MaterialDatePicker mdp2 = builder.build();
+
         // Popping up DatePickerDialog on clicking editText2
         editText2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -189,11 +194,11 @@ public class AddMedicationActivity extends AppCompatActivity {
                 editText2.setText(mdp2.getHeaderText());
             }
         });
+
         // Getting last_medication_id from Firebase Database
         databaseReferenceMedication.child("last_medication_id").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // Getting last_medicine_id from Firebase Database
                 ID id = dataSnapshot.getValue(ID.class);
                 if (id == null)
                     medication_id = 1;
@@ -202,7 +207,7 @@ public class AddMedicationActivity extends AppCompatActivity {
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-               // Toast.makeText(AddMedicationActivity.this, "" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddMedicationActivity.this, "" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -213,16 +218,10 @@ public class AddMedicationActivity extends AppCompatActivity {
                 int guest_id = guests_id_list.get(spinner1.getSelectedItemPosition());
                 int medicine_id = medicines_id_list.get(spinner2.getSelectedItemPosition());
                 String schedule = bda[numberPicker1.getValue()] + " " + meal[numberPicker2.getValue()];
-                Toast.makeText(AddMedicationActivity.this, "" + schedule, Toast.LENGTH_SHORT).show();
                 String start_date = editText1.getText().toString();
                 String end_date = editText2.getText().toString();
-                Toast.makeText(AddMedicationActivity.this, "yes", Toast.LENGTH_SHORT).show();
-                List<String>dates=getDatesBetween(start_date,end_date);
+                List<String> dates = getDatesBetween(start_date, end_date);
 
-                for (int i=0;i<dates.size();i++) {
-
-                    Toast.makeText(AddMedicationActivity.this, ""+dates.get(i), Toast.LENGTH_LONG).show();
-                }
                 if (spinner1 == null || spinner1.getSelectedItem() == null)
                     textView1.setError("Select a Guest");
                 else if (spinner1 == null || spinner1.getSelectedItem() == null)
@@ -230,17 +229,12 @@ public class AddMedicationActivity extends AppCompatActivity {
                 else
                 {
                     // Creating an object of Medication
-                    Medication medication = new Medication(medication_id, guest_id, medicine_id, schedule, (ArrayList<String>) dates);
+                    Medication medication = new Medication(medication_id, guest_id, medicine_id, schedule, dates);
 
                     // Uploading Medication data to Firebase Database
                     databaseReferenceMedication.child("Medications").child(Integer.toString(medication_id)).setValue(medication).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void unused) {
-                            //Toast.makeText(AddMedicationActivity.this, "New Medication Added", Toast.LENGTH_SHORT).show();
-                            for (int i=0;i<dates.size();i++) {
-
-                                Toast.makeText(AddMedicationActivity.this, ""+dates.get(i), Toast.LENGTH_SHORT).show();
-                            }
                             // Updating last_medication_id on Firebase
                             databaseReferenceMedication.child("last_medication_id").setValue(new ID(medication_id)).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
@@ -249,15 +243,16 @@ public class AddMedicationActivity extends AppCompatActivity {
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    //Toast.makeText(AddMedicationActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(AddMedicationActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             });
-                            //AddMedicationActivity.this.onBackPressed();    // going back on previous page
+                            Toast.makeText(AddMedicationActivity.this, "New Medication Added", Toast.LENGTH_SHORT).show();
+                            AddMedicationActivity.this.onBackPressed();    // going back on previous page
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            //Toast.makeText(AddMedicationActivity.this, "Error:" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddMedicationActivity.this, "Error:" + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -267,21 +262,17 @@ public class AddMedicationActivity extends AppCompatActivity {
 
     public static List<String> getDatesBetween(String startDate, String endDate) {
         List<String> s=new ArrayList<>();
-
         long  from= Date.parse(startDate);
-
         long to=Date.parse(endDate);
+        int x = 0;
 
-        int x=0;
-
-        while(from <= to) {
-            x=x+1;
-            System.out.println ("Dates  : "+new Date(from));
-            Date s1=new Date(Long.parseLong(String.valueOf(from)));
+        while (from <= to) {
+            x += 1;
+            System.out.println ("Dates: " + new Date(from));
+            Date s1 = new Date(Long.parseLong(String.valueOf(from)));
             s.add(String.valueOf(s1));
             from += ONE_DAY;
         }
-
         return s;
     }
 }

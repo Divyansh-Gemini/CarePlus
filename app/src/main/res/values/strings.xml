@@ -37,7 +37,7 @@
     </string-array>
 
     <string-array name="medicine_quantities">
-        <item>--units--</item>
+        <item>units</item>
         <item>Tablets</item>
         <item>Capsules</item>
         <item>ml</item>

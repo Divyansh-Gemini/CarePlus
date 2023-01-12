@@ -15,9 +15,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.careplus.medtracker.AddGuestActivity;
 import com.careplus.medtracker.AddHospitalActivity;
+import com.careplus.medtracker.AddHospitalizationActivity;
 import com.careplus.medtracker.R;
+import com.careplus.medtracker.model.Guest;
 import com.careplus.medtracker.model.Hospital;
+import com.careplus.medtracker.model.Hospitalization;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,58 +37,87 @@ import java.util.ArrayList;
 // Implementation "Edit" & "More" button is also here.
 // #################################################################################################
 
-public class HospitalizationCardAdapter extends RecyclerView.Adapter<HospitalizationCardAdapter.HospitalViewHolder> {
+public class HospitalizationCardAdapter extends RecyclerView.Adapter<HospitalizationCardAdapter.HospitalizationViewHolder> {
     Context context;
-    ArrayList<Hospital> hospital_list;
+    ArrayList<Hospitalization> hospitalization_list;
 
-    public HospitalizationCardAdapter(Context context, ArrayList<Hospital> hospital_list) {
+    public HospitalizationCardAdapter(Context context, ArrayList<Hospitalization> hospitalization_list) {
         this.context = context;
-        this.hospital_list = hospital_list;
+        this.hospitalization_list = hospitalization_list;
     }
 
-    // HospitalViewHolder is inner class & HospitalCardAdapter is outer class
-    public static class HospitalViewHolder extends RecyclerView.ViewHolder {
-        TextView textView1, textView2;
+    // HospitalizationViewHolder is inner class & HospitalizationCardAdapter is outer class
+    public static class HospitalizationViewHolder extends RecyclerView.ViewHolder {
+        TextView textView1, textView2, textView3;
         ImageView imageView;
         ImageButton btn_edit, btn_more;
 
         FirebaseDatabase firebaseDatabase;
-        DatabaseReference databaseReference;
+        DatabaseReference databaseReferenceGuest, databaseReferenceHospital, databaseReferenceHospitalization;
 
-        public HospitalViewHolder(@NonNull View itemView) {
+        public HospitalizationViewHolder(@NonNull View itemView) {
             super(itemView);
             textView1 = itemView.findViewById(R.id.textView1);
             textView2 = itemView.findViewById(R.id.textView2);
+            textView3 = itemView.findViewById(R.id.textView3);
             imageView = itemView.findViewById(R.id.imageView);
             btn_edit = itemView.findViewById(R.id.button1);
             btn_more = itemView.findViewById(R.id.button2);
 
             firebaseDatabase = FirebaseDatabase.getInstance();
-            databaseReference = firebaseDatabase.getReference("Hospital");
+            databaseReferenceGuest = firebaseDatabase.getReference("Guest/Guests");
+            databaseReferenceHospital = firebaseDatabase.getReference("Hospital/Hospitals");
+            databaseReferenceHospitalization = firebaseDatabase.getReference("Hospitalization");
         }
     }
 
     @NonNull
     @Override
-    public HospitalizationCardAdapter.HospitalViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public HospitalizationCardAdapter.HospitalizationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.custom_card, parent, false);
-        return new HospitalizationCardAdapter.HospitalViewHolder(view);
+        return new HospitalizationCardAdapter.HospitalizationViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull HospitalizationCardAdapter.HospitalViewHolder holder, int position) {
-        Hospital hospital = hospital_list.get(position);
-        holder.textView1.setText(hospital.getHospitalName());
-        holder.textView2.setText(hospital.getHospitalAddress());
-        holder.imageView.setImageResource(R.drawable.image_hospital);
+    public void onBindViewHolder(@NonNull HospitalizationCardAdapter.HospitalizationViewHolder holder, int position) {
+        Hospitalization hospitalization = hospitalization_list.get(position);
+
+        // Getting guestName from firebase using guestID which we got from hospitalization object and setting it to the textView
+        holder.databaseReferenceGuest.child(Integer.toString(hospitalization.getGuestID())).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Guest guest = dataSnapshot.getValue(Guest.class);
+                holder.textView1.setText(guest.getGuestName());
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(context, "" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Getting hospitalName from firebase using hospitalID which we got from hospitalization object and setting it to the textView
+        holder.databaseReferenceHospital.child(Integer.toString(hospitalization.getHospitalID())).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Hospital hospital = dataSnapshot.getValue(Hospital.class);
+                holder.textView2.setText("Admitted in " + hospital.getHospitalName());
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(context, "" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        holder.textView3.setText("from " + hospitalization.getAdmitDate());
+        holder.imageView.setImageResource(R.drawable.old_man_avatar);
 
         //##################### Edit Button #####################
         holder.btn_edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // On clicking "Edit", Going to AddGuestActivity using Intent
-                Intent i = new Intent(context, AddHospitalActivity.class);         // Sending guest_id with intent
-                i.putExtra("hospital_id", hospital.getHospitalID());
+                // On clicking "Edit", Going to AddHospitalizationActivity using Intent
+                Intent i = new Intent(context, AddHospitalizationActivity.class);         // Sending hospitalization_id with intent
+                i.putExtra("hospitalization_id", hospitalization.getHospitalizationID());
                 context.startActivity(i);
             }
         });
@@ -102,14 +135,14 @@ public class HospitalizationCardAdapter extends RecyclerView.Adapter<Hospitaliza
                         {
                             //##################### Delete Button #####################
                             case R.id.item1:
-                                Query query = holder.databaseReference.child("Hospitals").orderByChild("hospitalID").equalTo(hospital.getHospitalID());
+                                Query query = holder.databaseReferenceHospitalization.child("Hospitalizations").orderByChild("hospitalizationID").equalTo(hospitalization.getHospitalizationID());
                                 query.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         for (DataSnapshot childSnapshot: dataSnapshot.getChildren()) {
                                             childSnapshot.getRef().removeValue();
                                         }
-                                        Toast.makeText(context, "Hospital deleted successfully", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(context, "Hospitalization deleted successfully", Toast.LENGTH_SHORT).show();
                                     }
                                     @Override
                                     public void onCancelled(DatabaseError databaseError) {
@@ -129,6 +162,6 @@ public class HospitalizationCardAdapter extends RecyclerView.Adapter<Hospitaliza
 
     @Override
     public int getItemCount() {
-        return hospital_list.size();
+        return hospitalization_list.size();
     }
 }

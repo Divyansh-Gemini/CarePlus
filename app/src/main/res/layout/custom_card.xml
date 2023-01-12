@@ -28,11 +28,11 @@
             android:orientation="vertical"
             android:layout_marginLeft="10sp"
             android:layout_width="match_parent"
-            android:layout_height="104sp">
+            android:layout_height="105sp">
 
             <TextView
                 android:id="@+id/textView1"
-                android:text="Guest Name"
+                android:text=""
                 android:textSize="20sp"
                 android:layout_marginTop="5sp"
                 android:textColor="@color/black"
@@ -41,7 +41,7 @@
 
             <TextView
                 android:id="@+id/textView2"
-                android:text="Age &amp; Gender"
+                android:text=""
                 android:textSize="15sp"
                 android:layout_marginTop="5sp"
                 android:textColor="@color/black"
@@ -73,7 +73,7 @@
 
                 <ImageButton
                     android:id="@+id/button2"
-                    android:background="@drawable/icon_more"
+                    android:background="@drawable/icon_delete"
                     android:layout_marginHorizontal="5sp"
                     android:layout_width="25sp"
                     android:layout_height="25sp"/>

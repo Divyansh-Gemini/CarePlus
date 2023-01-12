@@ -14,15 +14,15 @@ import java.util.List;
 
 public class Medication {
     int hospitalization_id, guest_id, medicine_id;
-    String schedule, start_date, end_date;
-    List<String> dates= new ArrayList<String>();
+    String schedule;
+    List<String> dates;
 
-    public Medication(int hospitalization_id, int guest_id, int medicine_id, String schedule,ArrayList<String> dtes) {
+    public Medication(int hospitalization_id, int guest_id, int medicine_id, String schedule, List<String> dates) {
         this.hospitalization_id = hospitalization_id;
         this.guest_id = guest_id;
         this.medicine_id = medicine_id;
         this.schedule = schedule;
-        dates=dtes;
+        this.dates = dates;
     }
 
     public int getHospitalization_id() {
@@ -55,22 +55,6 @@ public class Medication {
 
     public void setSchedule(String schedule) {
         this.schedule = schedule;
-    }
-
-    public String getStart_date() {
-        return start_date;
-    }
-
-    public void setStart_date(String start_date) {
-        this.start_date = start_date;
-    }
-
-    public String getEnd_date() {
-        return end_date;
-    }
-
-    public void setEnd_date(String end_date) {
-        this.end_date = end_date;
     }
 
     public List<String> getDates() {
