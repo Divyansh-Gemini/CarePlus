@@ -15,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -61,6 +62,7 @@ public class SettingsFragment extends Fragment {
     private  Calendar calender2;
     private  Calendar calender3;
     Button SetAlarm;
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View myView = inflater.inflate(R.layout.fragment_settings, container, false);
@@ -181,12 +183,6 @@ public class SettingsFragment extends Fragment {
 
             }
         });
-        SetAlarm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setAlarmbreakfast();
-            }
-        });
 
         editText2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -274,6 +270,14 @@ public class SettingsFragment extends Fragment {
                 });
             }
         });
+        SetAlarm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setAlarmbreakfast();
+                setAlarmlunch();
+                setAlarmdinner();
+            }
+        });
         return myView;
     }
 
@@ -283,7 +287,23 @@ public class SettingsFragment extends Fragment {
         pendingIntent=PendingIntent.getBroadcast(getActivity(),0,intent,0);
         alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,calender.getTimeInMillis(),
                 AlarmManager.INTERVAL_DAY,pendingIntent);
-        Toast.makeText(getActivity(), "Alram Set SuccessFully for "+calender.getTime(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "Alram Set SuccessFully for breakFastTime: "+calender.getTime(), Toast.LENGTH_SHORT).show();
+    }
+ private void setAlarmlunch() {
+        alarmManager2= (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
+        Intent intent2=new Intent(getActivity(),AlramReciever2.class);
+         pendingIntent2=PendingIntent.getBroadcast(getActivity(),0,intent2,0);
+        alarmManager2.setInexactRepeating(AlarmManager.RTC_WAKEUP,calender2.getTimeInMillis(),
+                AlarmManager.INTERVAL_DAY,pendingIntent);
+        Toast.makeText(getActivity(), "Alram Set SuccessFully for LunchTime: "+calender2.getTime(), Toast.LENGTH_SHORT).show();
+    }
+    private void setAlarmdinner() {
+        alarmManager3= (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
+        Intent intent3=new Intent(getActivity(),AlramReciever3.class);
+        pendingIntent3=PendingIntent.getBroadcast(getActivity(),0,intent3,0);
+        alarmManager3.setInexactRepeating(AlarmManager.RTC_WAKEUP,calender3.getTimeInMillis(),
+                AlarmManager.INTERVAL_DAY,pendingIntent);
+        Toast.makeText(getActivity(), "Alram Set SuccessFully for DinnerTime: "+calender3.getTime(), Toast.LENGTH_SHORT).show();
     }
 
     public static String covertTimeFormat(int hours, int minutes)
@@ -304,9 +324,9 @@ public class SettingsFragment extends Fragment {
         return time;
 //       return ampm;
     }
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void createNotificationMethod1() {
         //this Particular Code will Create the Notification Channel
-        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
             CharSequence name="CareplusReminderChannel";//name of the channel
             String description="channel for Alarm Manager";//For what we have create the notification
             int importance= NotificationManager.IMPORTANCE_HIGH;
@@ -314,11 +334,11 @@ public class SettingsFragment extends Fragment {
             channel.setDescription(description);
             NotificationManager notificationManager=getContext().getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
-        }
+
     }
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public  void createNotificationMethod2() {
         //this Particular Code will Create the Notification Channel
-        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
             CharSequence name="CareplusReminderChannel";//name of the channel
             String description="channel for Alarm Manager";//For what we have create the notification
             int importance= NotificationManager.IMPORTANCE_HIGH;
@@ -326,11 +346,11 @@ public class SettingsFragment extends Fragment {
             channel.setDescription(description);
             NotificationManager notificationManager=getContext().getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
-        }
+
     }
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public  void createNotificationMethod3() {
         //this Particular Code will Create the Notification Channel
-        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
             CharSequence name="CareplusReminderChannel";//name of the channel
             String description="channel for Alarm Manager";//For what we have create the notification
             int importance= NotificationManager.IMPORTANCE_HIGH;
@@ -338,7 +358,7 @@ public class SettingsFragment extends Fragment {
             channel.setDescription(description);
             NotificationManager notificationManager=getContext().getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
-        }
+
     }
 
 }
