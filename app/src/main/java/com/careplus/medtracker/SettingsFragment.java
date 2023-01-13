@@ -5,8 +5,13 @@ package com.careplus.medtracker;
 // #################################################################################################
 
 import android.app.AlarmManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,6 +20,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -47,18 +53,27 @@ public class SettingsFragment extends Fragment {
     private MaterialTimePicker timePicker;
     private AlarmManager alarmManager;
     private PendingIntent pendingIntent;
+    private AlarmManager alarmManager2;
+    private PendingIntent pendingIntent2;
+    private AlarmManager alarmManager3;
+    private PendingIntent pendingIntent3;
     private  Calendar calender;
+    private  Calendar calender2;
+    private  Calendar calender3;
+    Button SetAlarm;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View myView = inflater.inflate(R.layout.fragment_settings, container, false);
         editText1 = myView.findViewById(R.id.editText1);
         editText2 = myView.findViewById(R.id.editText2);
         editText3 = myView.findViewById(R.id.editText3);
-
+        SetAlarm=myView.findViewById(R.id.SetAlarm);
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("MealsTime");
         Calendar ca = Calendar.getInstance();
-
+        createNotificationMethod1();
+        createNotificationMethod2();
+        createNotificationMethod3();
         databaseReference.child("breakfast_time").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -160,8 +175,16 @@ public class SettingsFragment extends Fragment {
                                 Toast.makeText(getActivity(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         });
+
                     }
                 });
+
+            }
+        });
+        SetAlarm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setAlarmbreakfast();
             }
         });
 
@@ -185,11 +208,11 @@ public class SettingsFragment extends Fragment {
                             editText2.setText(timePicker.getHour()+" : "+timePicker.getMinute()+" AM");
                         }
                         //Os Din Particular time Ko set Karva lega
-                        calender= Calendar.getInstance();
-                        calender.set(Calendar.HOUR_OF_DAY,timePicker.getHour());
-                        calender.set(Calendar.MINUTE,timePicker.getMinute());
-                        calender.set(Calendar.SECOND,0);
-                        calender.set(Calendar.MILLISECOND,0);
+                        calender2= Calendar.getInstance();
+                        calender2.set(Calendar.HOUR_OF_DAY,timePicker.getHour());
+                        calender2.set(Calendar.MINUTE,timePicker.getMinute());
+                        calender2.set(Calendar.SECOND,0);
+                        calender2.set(Calendar.MILLISECOND,0);
                         lunch_hour = timePicker.getHour();
                         lunch_minute = timePicker.getMinute();
                         MealsTime mealsTime = new MealsTime(lunch_hour, lunch_minute);
@@ -229,11 +252,11 @@ public class SettingsFragment extends Fragment {
                             editText3.setText(timePicker.getHour()+" : "+timePicker.getMinute()+" AM");
                         }
                         //Os Din Particular time Ko set Karva lega
-                        calender= Calendar.getInstance();
-                        calender.set(Calendar.HOUR_OF_DAY,timePicker.getHour());
-                        calender.set(Calendar.MINUTE,timePicker.getMinute());
-                        calender.set(Calendar.SECOND,0);
-                        calender.set(Calendar.MILLISECOND,0);
+                        calender3= Calendar.getInstance();
+                        calender3.set(Calendar.HOUR_OF_DAY,timePicker.getHour());
+                        calender3.set(Calendar.MINUTE,timePicker.getMinute());
+                        calender3.set(Calendar.SECOND,0);
+                        calender3.set(Calendar.MILLISECOND,0);
                         dinner_hour = timePicker.getHour();
                         dinner_minute = timePicker.getMinute();
                         MealsTime mealsTime = new MealsTime(dinner_hour, dinner_minute);
@@ -253,6 +276,16 @@ public class SettingsFragment extends Fragment {
         });
         return myView;
     }
+
+    private void setAlarmbreakfast() {
+        alarmManager= (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
+        Intent intent=new Intent(getActivity(),AlramReciever.class);
+        pendingIntent=PendingIntent.getBroadcast(getActivity(),0,intent,0);
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,calender.getTimeInMillis(),
+                AlarmManager.INTERVAL_DAY,pendingIntent);
+        Toast.makeText(getActivity(), "Alram Set SuccessFully for "+calender.getTime(), Toast.LENGTH_SHORT).show();
+    }
+
     public static String covertTimeFormat(int hours, int minutes)
     {
         String ampm = "PM";
@@ -270,6 +303,42 @@ public class SettingsFragment extends Fragment {
 
         return time;
 //       return ampm;
+    }
+    public void createNotificationMethod1() {
+        //this Particular Code will Create the Notification Channel
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
+            CharSequence name="CareplusReminderChannel";//name of the channel
+            String description="channel for Alarm Manager";//For what we have create the notification
+            int importance= NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel=new NotificationChannel("BreakFast",name,importance);
+            channel.setDescription(description);
+            NotificationManager notificationManager=getContext().getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+    public  void createNotificationMethod2() {
+        //this Particular Code will Create the Notification Channel
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
+            CharSequence name="CareplusReminderChannel";//name of the channel
+            String description="channel for Alarm Manager";//For what we have create the notification
+            int importance= NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel=new NotificationChannel("Lunch",name,importance);
+            channel.setDescription(description);
+            NotificationManager notificationManager=getContext().getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+    public  void createNotificationMethod3() {
+        //this Particular Code will Create the Notification Channel
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
+            CharSequence name="CareplusReminderChannel";//name of the channel
+            String description="channel for Alarm Manager";//For what we have create the notification
+            int importance= NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel=new NotificationChannel("Dinner",name,importance);
+            channel.setDescription(description);
+            NotificationManager notificationManager=getContext().getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
 }
