@@ -18,6 +18,9 @@ import com.careplus.medtracker.model.ID;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.datepicker.CalendarConstraints;
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DataSnapshot;
@@ -35,7 +38,6 @@ public class AddGuestActivity extends AppCompatActivity {
     TextView textViewGender;
     RadioButton radio_btn_male, radio_btn_female;
     MaterialButton btn;
-    int yyyy, mm, dd;
     int guest_id;
     boolean status = true;     // if new data then true, if updation then false
 
@@ -93,21 +95,35 @@ public class AddGuestActivity extends AppCompatActivity {
             });
         }
 
-        // Getting current date from Calendar class
-        Calendar ca = Calendar.getInstance();
-        yyyy = ca.get(Calendar.YEAR);
-        mm = ca.get(Calendar.MONTH);
-        dd = ca.get(Calendar.DATE);
-
         // Removing error on touching editText1
         editText1.setOnTouchListener((v, event) -> {
             textInputLayout1.setError(null);
             return false;
         });
 
-        // Popping up DatePickerDialog on clicking editText3
-        editText3.setOnClickListener(v ->
-                new DatePickerDialog(AddGuestActivity.this, listener, yyyy, mm, dd).show());
+        long today = MaterialDatePicker.todayInUtcMilliseconds();
+        CalendarConstraints.Builder constraints = new CalendarConstraints.Builder();
+        constraints.setOpenAt(today);   // Setting today's date when it will open first time
+
+        // Material Date Picker
+        MaterialDatePicker.Builder builder = MaterialDatePicker.Builder.datePicker();
+        builder.setTitleText("Date of Admit");
+        builder.setSelection(today);  // For default Selection means the current date ke liye hai
+        builder.setCalendarConstraints(constraints.build());    // Setting constraints so that it cannot go beyond or below the start and end dates
+        final MaterialDatePicker materialDatePicker = builder.build();
+
+        // Popping up DatePickerDialog on clicking editText1
+        editText3.setOnClickListener(v -> {
+            materialDatePicker.show(getSupportFragmentManager(), "Date Picker");
+            //new DatePickerDialog(AddHospitalizationActivity.this, listener1, admit_yyyy, admit_mm, admit_dd).show();
+        });
+
+        materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
+            @Override
+            public void onPositiveButtonClick(Object selection) {
+                editText3.setText(materialDatePicker.getHeaderText());
+            }
+        });
 
         // Getting last_guest_id from Firebase Database
         if (status) {
@@ -192,16 +208,4 @@ public class AddGuestActivity extends AppCompatActivity {
             }
         });
     }
-
-    // Setting the date in editText3 which is selected by the user in DatePickerDialog,
-    // And changing values of yyyy, mm, dd variables so that if user again opens the DatePickerDialog, previously selected date will select by default.
-    final DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
-        @Override
-        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            editText3.setText(dayOfMonth + "-" + (month + 1) + "-" + year);
-            yyyy = year;
-            mm = month;
-            dd = dayOfMonth;
-        }
-    };
 }

@@ -9,28 +9,35 @@ package com.careplus.medtracker.model;
 //              - Isme (properties, default & parameterized constructor, getter & setter methods) hote h.
 // #################################################################################################
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Medication {
-    int hospitalization_id, guest_id, medicine_id;
+    int medication_id, guest_id, medicine_id;
     String schedule;
-    List<String> dates;
+    //List<String> dates;
+    Map<String, Boolean> dates_and_status;
+            //= new HashMap<String, Integer>();
 
-    public Medication(int hospitalization_id, int guest_id, int medicine_id, String schedule, List<String> dates) {
-        this.hospitalization_id = hospitalization_id;
+    public Medication()
+    {   }
+
+
+    public Medication(int medication_id, int guest_id, int medicine_id, String schedule, Map<String, Boolean> dates_and_status) {
+        this.medication_id = medication_id;
         this.guest_id = guest_id;
         this.medicine_id = medicine_id;
         this.schedule = schedule;
-        this.dates = dates;
+        //this.dates = dates;
+        this.dates_and_status = dates_and_status;
     }
 
-    public int getHospitalization_id() {
-        return hospitalization_id;
+    public int getMedication_id() {
+        return medication_id;
     }
 
-    public void setHospitalization_id(int hospitalization_id) {
-        this.hospitalization_id = hospitalization_id;
+    public void setMedication_id(int medication_id) {
+        this.medication_id = medication_id;
     }
 
     public int getGuest_id() {
@@ -57,11 +64,11 @@ public class Medication {
         this.schedule = schedule;
     }
 
-    public List<String> getDates() {
-        return dates;
+    public Map<String, Boolean> getDatesAndStatus() {
+        return dates_and_status;
     }
 
-    public void setDates(List<String> dates) {
-        this.dates = dates;
+    public void setDatesAndStatus(Map<String, Boolean> dates_and_status) {
+        this.dates_and_status = dates_and_status;
     }
 }

@@ -14,7 +14,6 @@ public class Hospitalization {
     int guestID;
     int hospitalID;
     String admitDate;
-    String dischargeDate;
     String treatment;
 
     // Default constructor
@@ -23,12 +22,11 @@ public class Hospitalization {
 
     // Parameterized constructor
     public Hospitalization(int hospitalizationID, int guestID, int hospitalID,
-                           String admitDate, String dischargeDate, String treatment) {
+                           String admitDate, String treatment) {
         this.hospitalizationID = hospitalizationID;
         this.guestID = guestID;
         this.hospitalID = hospitalID;
         this.admitDate = admitDate;
-        this.dischargeDate = dischargeDate;
         this.treatment = treatment;
     }
 
@@ -62,14 +60,6 @@ public class Hospitalization {
 
     public void setAdmitDate(String admitDate) {
         this.admitDate = admitDate;
-    }
-
-    public String getDischargeDate() {
-        return dischargeDate;
-    }
-
-    public void setDischargeDate(String dischargeDate) {
-        this.dischargeDate = dischargeDate;
     }
 
     public String getTreatment() {

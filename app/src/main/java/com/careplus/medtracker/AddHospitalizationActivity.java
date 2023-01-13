@@ -24,6 +24,10 @@ import com.careplus.medtracker.model.Medication;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.datepicker.CalendarConstraints;
+import com.google.android.material.datepicker.DateValidatorPointForward;
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -38,9 +42,8 @@ import java.util.List;
 public class AddHospitalizationActivity extends AppCompatActivity {
     TextView textView1, textView2;
     Spinner spinner1, spinner2;
-    TextInputEditText editText1, editText2, editText3;
+    TextInputEditText editText1, editText2;
     MaterialButton btn;
-    int admit_yyyy, admit_mm, admit_dd, discharge_yyyy, discharge_mm, discharge_dd;
     List<String> guests_name_list, hospitals_name_list;
     List<Integer> guests_id_list, hospitals_id_list;
 
@@ -58,7 +61,6 @@ public class AddHospitalizationActivity extends AppCompatActivity {
         spinner2 = findViewById(R.id.spinner2);
         editText1 = findViewById(R.id.editText1);
         editText2 = findViewById(R.id.editText2);
-        editText3 = findViewById(R.id.editText3);
         btn = findViewById(R.id.button);
 
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -114,19 +116,28 @@ public class AddHospitalizationActivity extends AppCompatActivity {
         });
         spinner2.setAdapter(adapter2);  // Linked spinner with ArrayAdapter
 
-        // Getting current date from Calendar class
-        Calendar ca = Calendar.getInstance();
-        admit_yyyy = discharge_yyyy = ca.get(Calendar.YEAR);
-        admit_mm = discharge_mm = ca.get(Calendar.MONTH);
-        admit_dd = discharge_dd = ca.get(Calendar.DATE);
+        long today = MaterialDatePicker.todayInUtcMilliseconds();
+        CalendarConstraints.Builder constraints = new CalendarConstraints.Builder();
+        constraints.setOpenAt(today);   // Setting today's date when it will open first time
+
+        // Material Date Picker
+        MaterialDatePicker.Builder builder = MaterialDatePicker.Builder.datePicker();
+        builder.setTitleText("Date of Admit");
+        builder.setSelection(today);  // For default Selection means the current date ke liye hai
+        builder.setCalendarConstraints(constraints.build());    // Setting constraints so that it cannot go beyond or below the start and end dates
+        final MaterialDatePicker materialDatePicker = builder.build();
 
         // Popping up DatePickerDialog on clicking editText1
-        editText1.setOnClickListener(v ->
-                new DatePickerDialog(AddHospitalizationActivity.this, listener1, admit_yyyy, admit_mm, admit_dd).show());
+        editText1.setOnClickListener(v -> {
+            materialDatePicker.show(getSupportFragmentManager(), "Date Picker");
+        });
 
-        // Popping up DatePickerDialog on clicking editText2
-        editText2.setOnClickListener(v ->
-                new DatePickerDialog(AddHospitalizationActivity.this, listener2, discharge_yyyy, discharge_mm, discharge_dd).show());
+        materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
+            @Override
+            public void onPositiveButtonClick(Object selection) {
+                editText1.setText(materialDatePicker.getHeaderText());
+            }
+        });
 
         // Getting last_hospitalization_id from Firebase Database
         databaseReferenceHospitalization.child("last_hospitalization_id").addValueEventListener(new ValueEventListener() {
@@ -152,8 +163,7 @@ public class AddHospitalizationActivity extends AppCompatActivity {
                 int guest_id = guests_id_list.get(spinner1.getSelectedItemPosition());
                 int hospital_id = hospitals_id_list.get(spinner2.getSelectedItemPosition());
                 String date_of_admit = editText1.getText().toString();
-                String date_of_discharge = editText2.getText().toString();
-                String treatment = editText3.getText().toString();
+                String treatment = editText2.getText().toString();
 
                 if (spinner1 == null || spinner1.getSelectedItem() == null)
                     textView1.setError("Select a Guest");
@@ -162,7 +172,7 @@ public class AddHospitalizationActivity extends AppCompatActivity {
                 else
                 {
                     // Creating an object of Hospitalization
-                    Hospitalization hospitalization = new Hospitalization(hospitalization_id, guest_id, hospital_id,  date_of_admit, date_of_discharge, treatment);
+                    Hospitalization hospitalization = new Hospitalization(hospitalization_id, guest_id, hospital_id,  date_of_admit, treatment);
 
                     // Uploading Hospitalization data to Firebase Database
                     databaseReferenceHospitalization.child("Hospitalizations").child(Integer.toString(hospitalization_id)).setValue(hospitalization).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -193,28 +203,4 @@ public class AddHospitalizationActivity extends AppCompatActivity {
             }
         });
     }
-
-    // Setting the date in editText1 which is selected by the user in DatePickerDialog,
-    // And changing values of yyyy, mm, dd variables so that if user again opens the DatePickerDialog, previously selected date will select by default.
-    final DatePickerDialog.OnDateSetListener listener1 = new DatePickerDialog.OnDateSetListener() {
-        @Override
-        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            editText1.setText(dayOfMonth + "-" + (month + 1) + "-" + year);
-            admit_yyyy = year;
-            admit_mm = month;
-            admit_dd = dayOfMonth;
-        }
-    };
-
-    // Setting the date in editText2 which is selected by the user in DatePickerDialog,
-    // And changing values of yyyy, mm, dd variables so that if user again opens the DatePickerDialog, previously selected date will select by default.
-    final DatePickerDialog.OnDateSetListener listener2 = new DatePickerDialog.OnDateSetListener() {
-        @Override
-        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            editText2.setText(dayOfMonth + "-" + (month + 1) + "-" + year);
-            discharge_yyyy = year;
-            discharge_mm = month;
-            discharge_dd = dayOfMonth;
-        }
-    };
 }

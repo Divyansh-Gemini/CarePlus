@@ -1,5 +1,7 @@
 package com.careplus.medtracker;
 
+import static android.content.ContentValues.TAG;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
@@ -8,14 +10,25 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.careplus.medtracker.model.Guest;
 import com.careplus.medtracker.model.ID;
 import com.careplus.medtracker.model.Medicine;
@@ -31,18 +44,27 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class AddMedicineActivity extends AppCompatActivity {
     TextInputLayout textInputLayout1;
-    TextInputEditText editText1, editText2, editText3;
+    TextInputEditText editText2, editText3;
+    AutoCompleteTextView autoCompleteTextView;
     Spinner spinner;
     AppCompatButton btn_minus, btn_plus;
     TextView textViewUnits;
     MaterialButton btn;
     int medicine_id;
     boolean status = true;     // if new data then true, if updation then false
+    String med_name = "";
+    ArrayList<String> medicine_names = new ArrayList<>();
+    ArrayList<String> manufacturer_names = new ArrayList<>();
 
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
@@ -53,7 +75,7 @@ public class AddMedicineActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_medicine);
         textInputLayout1 = findViewById(R.id.textInputLayout1);
-        editText1 = findViewById(R.id.editText1);
+        autoCompleteTextView = findViewById(R.id.autoCompleteTextView);
         editText2 = findViewById(R.id.editText2);
         spinner = findViewById(R.id.spinner);
         editText3 = findViewById(R.id.editText3);
@@ -65,10 +87,63 @@ public class AddMedicineActivity extends AppCompatActivity {
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("Medicine");
 
+        String api_url = "https://beta.myupchar.com/api/medicine/search?api_key=dcd5391705e71bbb87ffaf683b0b8f44&name=";
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        autoCompleteTextView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                med_name = autoCompleteTextView.getText().toString();
+                medicine_names.add(0, med_name);
+                // Request a string response from the provided URL.
+                StringRequest stringRequest = new StringRequest(Request.Method.GET, api_url + med_name,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                try {
+                                    JSONObject jsonObject = new JSONObject(response);
+                                    JSONArray jsonArray = jsonObject.getJSONArray("data");
+                                    //Log.e("api","data " + jsonArray.length());
+                                    //Log.e("api","data " + jsonArray.toString());
+                                    for (int i = 0; i < jsonArray.length(); i++) {
+                                        //Log.e("api","i: " + i);
+                                        JSONObject singleObject = jsonArray.getJSONObject(i);
+                                        //Log.e("api","Medicine: " + singleObject.getString("name"));
+                                        medicine_names.add(singleObject.getString("name"));
+                                        //Log.e("api","Manufacturer: " + singleObject.getJSONObject("manufacturer").getString("name"));
+                                        manufacturer_names.add(singleObject.getJSONObject("manufacturer").getString("name"));
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Log.e("api","Error: " + error.getLocalizedMessage());
+                                Toast.makeText(AddMedicineActivity.this, "" + error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                // Add the request to the RequestQueue.
+                queue.add(stringRequest);
+
+                ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(AddMedicineActivity.this, android.R.layout.simple_list_item_1, medicine_names);
+                autoCompleteTextView.setAdapter(adapter1);
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
         // Setting values of array in Spinner using ArrayAdapter
         final String[] medicine_types = getResources().getStringArray(R.array.medicine_types);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, medicine_types);
-        spinner.setAdapter(adapter);
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, medicine_types);
+        spinner.setAdapter(adapter2);
 
         // Getting medicine_id from MedicineCardAdapter.java on clicking edit button
         // And filling it to TextFields
@@ -80,7 +155,7 @@ public class AddMedicineActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     Medicine medicine = dataSnapshot.getValue(Medicine.class);
-                    editText1.setText(medicine.getMedicineName());
+                    autoCompleteTextView.setText(medicine.getMedicineName());
                     editText2.setText(medicine.getMedicineCompany());
                     List medicine_types_list = Arrays.asList(medicine_types);
                     spinner.setSelection(medicine_types_list.indexOf(medicine.getMedicineType()));
@@ -96,7 +171,7 @@ public class AddMedicineActivity extends AppCompatActivity {
         }
 
         // Removing error on touching editText1
-        editText1.setOnTouchListener((v, event) -> {
+        autoCompleteTextView.setOnTouchListener((v, event) -> {
             textInputLayout1.setError(null);
             return false;
         });
@@ -163,7 +238,7 @@ public class AddMedicineActivity extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String medicine_name = editText1.getText().toString().trim();
+                String medicine_name = autoCompleteTextView.getText().toString().trim();
                 String medicine_company = editText2.getText().toString().trim();
                 String medicine_type = spinner.getSelectedItem().toString();
 

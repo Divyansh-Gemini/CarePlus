@@ -38,7 +38,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AddMedicationActivity extends AppCompatActivity {
     TextView textView1, textView2;
@@ -139,47 +141,38 @@ public class AddMedicationActivity extends AppCompatActivity {
         ca.clear();
 
         long today = MaterialDatePicker.todayInUtcMilliseconds();
-        ca.setTimeInMillis(today);
-
-        ca.set(Calendar.MONTH,Calendar.JANUARY);
-        long january = ca.getTimeInMillis();
-
-        ca.set(Calendar.MONTH, Calendar.DECEMBER);
-        long december = ca.getTimeInMillis();
 
         CalendarConstraints.Builder constraints = new CalendarConstraints.Builder();
-        constraints.setStart(january);  // Setting starting month
-        constraints.setEnd(december);   // Setting end month
+        constraints.setStart(today);    // Setting starting month
         constraints.setOpenAt(today);   // Setting today's date when it will open first time
         constraints.setValidator(DateValidatorPointForward.now());  // Setting validator so that previous dates cannot be selected
 
         // Material Date Picker
         MaterialDatePicker.Builder builder = MaterialDatePicker.Builder.datePicker();
-        builder.setTitleText("Set Date");
-        //builder.setSelection(today);  // For default Selection means the current date ke liye hai
+        builder.setTitleText("Start Date");
+        builder.setSelection(today);  // For default Selection means the current date ke liye hai
         builder.setCalendarConstraints(constraints.build());    // Setting constraints so that it cannot go beyond or below the start and end dates
-        final MaterialDatePicker mdp = builder.build();
+        final MaterialDatePicker materialDatePicker = builder.build();
 
         // Popping up DatePickerDialog on clicking editText1
         editText1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mdp.show(getSupportFragmentManager(), "Date Picker");
+                materialDatePicker.show(getSupportFragmentManager(), "Date Picker");
             }
         });
 
-        mdp.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
+        materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
             @Override
             public void onPositiveButtonClick(Object selection) {
-                editText1.setText(mdp.getHeaderText());
+                editText1.setText(materialDatePicker.getHeaderText());
             }
         });
 
         MaterialDatePicker.Builder builder2 = MaterialDatePicker.Builder.datePicker();
-        builder2.setTitleText("Set Date");
-        //builder.setSelection(today);  // For default Selection means the current date ke liye hai
-        builder.setCalendarConstraints(constraints.build());    // Setting constraints so that it cannot go beyond or below the start and end dates
-        final MaterialDatePicker mdp2 = builder.build();
+        builder2.setTitleText("End Date");
+        builder2.setCalendarConstraints(constraints.build());    // Setting constraints so that it cannot go beyond or below the start and end dates
+        final MaterialDatePicker mdp2 = builder2.build();
 
         // Popping up DatePickerDialog on clicking editText2
         editText2.setOnClickListener(new View.OnClickListener() {
@@ -220,7 +213,11 @@ public class AddMedicationActivity extends AppCompatActivity {
                 String schedule = bda[numberPicker1.getValue()] + " " + meal[numberPicker2.getValue()];
                 String start_date = editText1.getText().toString();
                 String end_date = editText2.getText().toString();
+
                 List<String> dates = getDatesBetween(start_date, end_date);
+                Map<String, Boolean> dates_and_status = new HashMap<String, Boolean>();
+                for (String date : dates)
+                    dates_and_status.put(date.substring(4,10), false);
 
                 if (spinner1 == null || spinner1.getSelectedItem() == null)
                     textView1.setError("Select a Guest");
@@ -229,7 +226,7 @@ public class AddMedicationActivity extends AppCompatActivity {
                 else
                 {
                     // Creating an object of Medication
-                    Medication medication = new Medication(medication_id, guest_id, medicine_id, schedule, dates);
+                    Medication medication = new Medication(medication_id, guest_id, medicine_id, schedule, dates_and_status);
 
                     // Uploading Medication data to Firebase Database
                     databaseReferenceMedication.child("Medications").child(Integer.toString(medication_id)).setValue(medication).addOnSuccessListener(new OnSuccessListener<Void>() {

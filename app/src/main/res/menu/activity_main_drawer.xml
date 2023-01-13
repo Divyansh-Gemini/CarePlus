@@ -30,11 +30,6 @@
             android:title="@string/menu_settings" />
 
         <item
-            android:id="@+id/nav_help_and_feedback"
-            android:icon="@drawable/icon_help_and_feedback"
-            android:title="@string/menu_help_and_feedback" />
-
-        <item
             android:id="@+id/nav_about"
             android:icon="@drawable/icon_about"
             android:title="@string/menu_about" />

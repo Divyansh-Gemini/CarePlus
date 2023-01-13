@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/Widget.Material3.CardView.Elevated"
     app:cardBackgroundColor="@color/white"
+    app:cardElevation="10sp"
     android:clickable="true"
     android:focusable="true"
     app:cardCornerRadius="15sp"
@@ -67,6 +68,7 @@
                 <ImageButton
                     android:id="@+id/button1"
                     android:background="@drawable/icon_edit"
+                    android:backgroundTint="@color/black"
                     android:layout_marginHorizontal="5sp"
                     android:layout_width="25sp"
                     android:layout_height="25sp"/>
@@ -74,6 +76,7 @@
                 <ImageButton
                     android:id="@+id/button2"
                     android:background="@drawable/icon_delete"
+                    android:backgroundTint="@color/black"
                     android:layout_marginHorizontal="5sp"
                     android:layout_width="25sp"
                     android:layout_height="25sp"/>

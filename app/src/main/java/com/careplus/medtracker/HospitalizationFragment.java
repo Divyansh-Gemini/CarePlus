@@ -54,17 +54,16 @@ public class HospitalizationFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         // Pulling value from Firebase in alphabetically order of hospitalizationName
-        Query query = databaseReference.orderByChild("hospitalizationName");
-        query.addValueEventListener(new ValueEventListener() {
+        databaseReference.orderByChild("hospitalizationName").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
                 for(DataSnapshot dataSnapshot : snapshot.getChildren())
                 {
                     Hospitalization hospitalization = dataSnapshot.getValue(Hospitalization.class);
-                    list.add(hospitalization);    // Adding all the Hospital objects (that are received from the Firebase) to the list
+                    list.add(hospitalization);    // Adding all the Hospitalization objects (that are received from the Firebase) to the list
                 }
-                adapter.notifyDataSetChanged();     // Notifying adapter (hospitalizationCardAdpater) that the dataset has been updated
+                adapter.notifyDataSetChanged();     // Notifying adapter (hospitalizationCardAdapter) that the dataset has been updated
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
