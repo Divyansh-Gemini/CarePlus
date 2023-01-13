@@ -15,20 +15,16 @@ import java.util.Map;
 public class Medication {
     int medication_id, guest_id, medicine_id;
     String schedule;
-    //List<String> dates;
     Map<String, Boolean> dates_and_status;
-            //= new HashMap<String, Integer>();
 
     public Medication()
     {   }
-
 
     public Medication(int medication_id, int guest_id, int medicine_id, String schedule, Map<String, Boolean> dates_and_status) {
         this.medication_id = medication_id;
         this.guest_id = guest_id;
         this.medicine_id = medicine_id;
         this.schedule = schedule;
-        //this.dates = dates;
         this.dates_and_status = dates_and_status;
     }
 

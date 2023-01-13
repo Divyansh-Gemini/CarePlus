@@ -23,6 +23,11 @@ import com.careplus.medtracker.model.MealsTime;
 import com.careplus.medtracker.model.Medicine;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.datepicker.CalendarConstraints;
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
+import com.google.android.material.timepicker.MaterialTimePicker;
+import com.google.android.material.timepicker.TimeFormat;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -40,6 +45,8 @@ public class SettingsFragment extends Fragment {
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
 
+    MaterialTimePicker materialTimePicker1, materialTimePicker2, materialTimePicker3;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View myView = inflater.inflate(R.layout.fragment_settings, container, false);
@@ -50,6 +57,27 @@ public class SettingsFragment extends Fragment {
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("MealsTime");
         Calendar ca = Calendar.getInstance();
+
+        materialTimePicker1 = new MaterialTimePicker.Builder()
+                .setTitleText("Breakfast Time")
+                .setTimeFormat(TimeFormat.CLOCK_12H)
+                .setHour(breakfast_hour)
+                .setMinute(breakfast_minute)
+                .build();
+
+        materialTimePicker2 = new MaterialTimePicker.Builder()
+                .setTitleText("Lunch Time")
+                .setTimeFormat(TimeFormat.CLOCK_12H)
+                .setHour(lunch_hour)
+                .setMinute(lunch_minute)
+                .build();
+
+        materialTimePicker3 = new MaterialTimePicker.Builder()
+                .setTitleText("Dinner Time")
+                .setTimeFormat(TimeFormat.CLOCK_12H)
+                .setHour(dinner_hour)
+                .setMinute(dinner_minute)
+                .build();
 
         databaseReference.child("breakfast_time").addValueEventListener(new ValueEventListener() {
             @Override
@@ -63,6 +91,8 @@ public class SettingsFragment extends Fragment {
                     breakfast_hour = mealsTime.getMeal_hour();
                     breakfast_minute = mealsTime.getMeal_minute();
                 }
+//                materialTimePicker1.setHour(breakfast_hour);
+//                materialTimePicker1.setMinute(breakfast_minute);
                 editText1.setText(covertTimeFormat(breakfast_hour, breakfast_minute));
             }
             @Override
@@ -83,6 +113,8 @@ public class SettingsFragment extends Fragment {
                     lunch_hour = mealsTime.getMeal_hour();
                     lunch_minute = mealsTime.getMeal_minute();
                 }
+//                materialTimePicker2.setHour(lunch_hour);
+//                materialTimePicker2.setMinute(lunch_minute);
                 editText2.setText(covertTimeFormat(lunch_hour, lunch_minute));
             }
             @Override
@@ -103,6 +135,8 @@ public class SettingsFragment extends Fragment {
                     dinner_hour = mealsTime.getMeal_hour();
                     dinner_minute = mealsTime.getMeal_minute();
                 }
+//                materialTimePicker3.setHour(dinner_hour);
+//                materialTimePicker3.setMinute(dinner_minute);
                 editText3.setText(covertTimeFormat(dinner_hour, dinner_minute));
             }
             @Override
@@ -114,91 +148,88 @@ public class SettingsFragment extends Fragment {
         editText1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new TimePickerDialog(getActivity(), listener1, breakfast_hour, breakfast_minute, false).show();
+                materialTimePicker1.show(requireFragmentManager(), "fragment_tag");
+            }
+        });
+
+        materialTimePicker1.addOnPositiveButtonClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                breakfast_hour = materialTimePicker1.getHour();
+                breakfast_minute = materialTimePicker1.getMinute();
+
+                MealsTime mealsTime = new MealsTime(breakfast_hour, breakfast_minute);
+                databaseReference.child("breakfast_time").setValue(mealsTime).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused)
+                    {   }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getActivity(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+                editText1.setText(covertTimeFormat(breakfast_hour, breakfast_minute));
             }
         });
 
         editText2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new TimePickerDialog(getActivity(), listener2, lunch_hour, lunch_minute, false).show();
+                materialTimePicker2.show(requireFragmentManager(), "fragment_tag");
+            }
+        });
+
+        materialTimePicker2.addOnPositiveButtonClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                lunch_hour = materialTimePicker2.getHour();
+                lunch_minute = materialTimePicker2.getMinute();
+
+                MealsTime mealsTime = new MealsTime(lunch_hour, lunch_minute);
+                databaseReference.child("lunch_time").setValue(mealsTime).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused)
+                    {   }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getActivity(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+                editText2.setText(covertTimeFormat(lunch_hour, lunch_minute));
             }
         });
 
         editText3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new TimePickerDialog(getActivity(), listener3, dinner_hour, dinner_minute, false).show();
+                materialTimePicker3.show(requireFragmentManager(), "fragment_tag");
+            }
+        });
+
+        materialTimePicker3.addOnPositiveButtonClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dinner_hour = materialTimePicker3.getHour();
+                dinner_minute = materialTimePicker3.getMinute();
+
+                MealsTime mealsTime = new MealsTime(dinner_hour, dinner_minute);
+                databaseReference.child("dinner_time").setValue(mealsTime).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused)
+                    {   }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getActivity(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+                editText3.setText(covertTimeFormat(dinner_hour, dinner_minute));
             }
         });
         return myView;
     }
-
-    TimePickerDialog.OnTimeSetListener listener1 = new TimePickerDialog.OnTimeSetListener() {
-        @Override
-        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-
-            MealsTime mealsTime = new MealsTime(hourOfDay, minute);
-            databaseReference.child("breakfast_time").setValue(mealsTime).addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void unused)
-                {   }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getActivity(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
-
-            editText1.setText(covertTimeFormat(hourOfDay, minute));
-            breakfast_hour = hourOfDay;
-            breakfast_minute = minute;
-        }
-    };
-
-    TimePickerDialog.OnTimeSetListener listener2 = new TimePickerDialog.OnTimeSetListener() {
-        @Override
-        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-
-            MealsTime mealsTime = new MealsTime(hourOfDay, minute);
-            databaseReference.child("lunch_time").setValue(mealsTime).addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void unused)
-                {   }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getActivity(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
-
-            editText2.setText(covertTimeFormat(hourOfDay, minute));
-            lunch_hour = hourOfDay;
-            lunch_minute = minute;
-        }
-    };
-
-    TimePickerDialog.OnTimeSetListener listener3 = new TimePickerDialog.OnTimeSetListener() {
-        @Override
-        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-
-            MealsTime mealsTime = new MealsTime(hourOfDay, minute);
-            databaseReference.child("dinner_time").setValue(mealsTime).addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void unused)
-                {   }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getActivity(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
-
-            editText3.setText(covertTimeFormat(hourOfDay, minute));
-            dinner_hour = hourOfDay;
-            dinner_minute = minute;
-        }
-    };
 
     public static String covertTimeFormat(int hours, int minutes)
     {

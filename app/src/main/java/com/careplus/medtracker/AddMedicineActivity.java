@@ -155,11 +155,13 @@ public class AddMedicineActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     Medicine medicine = dataSnapshot.getValue(Medicine.class);
-                    autoCompleteTextView.setText(medicine.getMedicineName());
-                    editText2.setText(medicine.getMedicineCompany());
-                    List medicine_types_list = Arrays.asList(medicine_types);
-                    spinner.setSelection(medicine_types_list.indexOf(medicine.getMedicineType()));
-                    editText3.setText(String.valueOf(medicine.getMedicineStockCount()));
+                    if (medicine != null) {
+                        autoCompleteTextView.setText(medicine.getMedicineName());
+                        editText2.setText(medicine.getMedicineCompany());
+                        List medicine_types_list = Arrays.asList(medicine_types);
+                        spinner.setSelection(medicine_types_list.indexOf(medicine.getMedicineType()));
+                        editText3.setText(String.valueOf(medicine.getMedicineStockCount()));
+                    }
                 }
 
                 // Displaying the error msg in the Toast if fetching data from Firebase is unsuccessful

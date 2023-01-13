@@ -75,16 +75,18 @@ public class AddGuestActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     Guest guest = dataSnapshot.getValue(Guest.class);
-                    editText1.setText(guest.getGuestName());
-                    editText2.setText(String.valueOf(guest.getGuestAge()));
-                    if (guest.getGuestGender().equalsIgnoreCase("male"))
-                        radio_btn_male.setChecked(true);
-                    else if (guest.getGuestGender().equalsIgnoreCase("female"))
-                        radio_btn_female.setChecked(true);
-                    editText3.setText(guest.getGuestDateOfAdmit());
-                    editText4.setText(guest.getGuestKnownName());
-                    editText5.setText(guest.getGuestKnownNumber());
-                    editText6.setText(guest.getGuestAddress());
+                    if (guest != null) {
+                        editText1.setText(guest.getGuestName());
+                        editText2.setText(String.valueOf(guest.getGuestAge()));
+                        if (guest.getGuestGender().equalsIgnoreCase("male"))
+                            radio_btn_male.setChecked(true);
+                        else if (guest.getGuestGender().equalsIgnoreCase("female"))
+                            radio_btn_female.setChecked(true);
+                        editText3.setText(guest.getGuestDateOfAdmit());
+                        editText4.setText(guest.getGuestKnownName());
+                        editText5.setText(guest.getGuestKnownNumber());
+                        editText6.setText(guest.getGuestAddress());
+                    }
                 }
 
                 // Displaying the error msg in the Toast if fetching data from Firebase is unsuccessful

@@ -130,20 +130,6 @@ public class MedicationCardAdapter extends RecyclerView.Adapter<MedicationCardAd
         holder.textView3.setText(medication.getSchedule());
         holder.imageView.setImageResource(R.drawable.old_man_avatar);
 
-        String[] months = context.getResources().getStringArray(R.array.months);
-
-        // Getting today's date & setting it to the textView
-//        Calendar ca = Calendar.getInstance();
-//        holder.mm = ca.get(Calendar.MONTH);
-//        holder.dd = ca.get(Calendar.DATE);
-
-        // Getting date & month as String
-//        if (holder.dd < 10)
-//            holder.date = "0";
-//        holder.date += holder.dd;
-//        holder.month = months[holder.mm].substring(0,3);
-//        holder.month_date = holder.month + " " + holder.date;
-
         holder.month_date = pref.getString("month_date", "0");
 
         //##################### Taken Button #####################
@@ -186,40 +172,23 @@ public class MedicationCardAdapter extends RecyclerView.Adapter<MedicationCardAd
             }
         });
 
-        //##################### More Button #####################
+        //##################### Delete Button #####################
         holder.btn_more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PopupMenu p = new PopupMenu(context, holder.btn_more);
-                p.getMenuInflater().inflate(R.menu.more_menu, p.getMenu());
-                p.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                Query query = holder.databaseReferenceMedication.child("Medications").child(String.valueOf(medication.getMedication_id()));
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId())
-                        {
-                            //##################### Delete Button #####################
-                            case R.id.item1:
-                                Query query = holder.databaseReferenceMedication.child("Medications").orderByChild("medicationID").equalTo(medication.getMedication_id());
-                                query.addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        for (DataSnapshot childSnapshot: dataSnapshot.getChildren()) {
-                                            childSnapshot.getRef().removeValue();
-                                        }
-                                        Toast.makeText(context, "Medication deleted successfully", Toast.LENGTH_SHORT).show();
-                                    }
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-                                        Toast.makeText(context, "" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                                notifyDataSetChanged();
-                                break;
-                        }
-                        return false;
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        dataSnapshot.getRef().removeValue();
+                        Toast.makeText(context, "Medication deleted successfully", Toast.LENGTH_SHORT).show();
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Toast.makeText(context, "" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
-                p.show();
+                notifyDataSetChanged();
             }
         });
     }

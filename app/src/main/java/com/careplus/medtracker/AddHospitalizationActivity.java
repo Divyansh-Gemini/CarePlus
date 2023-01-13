@@ -46,8 +46,9 @@ public class AddHospitalizationActivity extends AppCompatActivity {
     MaterialButton btn;
     List<String> guests_name_list, hospitals_name_list;
     List<Integer> guests_id_list, hospitals_id_list;
-
     int hospitalization_id;
+    boolean status = true;     // if new data then true, if updation then false
+
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReferenceGuest, databaseReferenceHospital, databaseReferenceHospitalization;
 
@@ -115,6 +116,32 @@ public class AddHospitalizationActivity extends AppCompatActivity {
             }
         });
         spinner2.setAdapter(adapter2);  // Linked spinner with ArrayAdapter
+
+        // Getting hospitalization_id from HospitalizationCardAdapter.java on clicking edit button
+        // And filling it to TextFields
+        Bundle b = getIntent().getExtras();
+        if (b != null) {
+            hospitalization_id = b.getInt("hospitalization_id");
+            status = false;
+            databaseReferenceHospitalization.child("Hospitalizations").child(Integer.toString(hospitalization_id)).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    Hospitalization hospitalization = dataSnapshot.getValue(Hospitalization.class);
+                    if (hospitalization != null) {
+                        spinner1.setSelection(guests_id_list.indexOf(hospitalization.getGuestID()));
+                        spinner2.setSelection(hospitals_id_list.indexOf(hospitalization.getHospitalID()));
+                        editText1.setText(hospitalization.getAdmitDate());
+                        editText2.setText(hospitalization.getTreatment());
+                    }
+                }
+
+                // Displaying the error msg in the Toast if fetching data from Firebase is unsuccessful
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Toast.makeText(AddHospitalizationActivity.this, "" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
 
         long today = MaterialDatePicker.todayInUtcMilliseconds();
         CalendarConstraints.Builder constraints = new CalendarConstraints.Builder();

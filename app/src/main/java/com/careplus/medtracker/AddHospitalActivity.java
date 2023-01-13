@@ -60,10 +60,12 @@ public class AddHospitalActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     Hospital hospital = dataSnapshot.getValue(Hospital.class);
-                    editText1.setText(hospital.getHospitalName());
-                    editText2.setText(hospital.getHospitalAddress());
-                    editText3.setText(hospital.getHospitalMobile());
-                    editText4.setText(hospital.getHospitalEmail());
+                    if (hospital != null) {
+                        editText1.setText(hospital.getHospitalName());
+                        editText2.setText(hospital.getHospitalAddress());
+                        editText3.setText(hospital.getHospitalMobile());
+                        editText4.setText(hospital.getHospitalEmail());
+                    }
                 }
 
                 // Displaying the error msg in the Toast if fetching data from Firebase is unsuccessful

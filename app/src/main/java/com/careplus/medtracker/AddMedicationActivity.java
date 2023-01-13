@@ -53,6 +53,7 @@ public class AddMedicationActivity extends AppCompatActivity {
     List<Integer> guests_id_list, medicines_id_list;
     static final long ONE_DAY = 24 * 60 * 60 * 1000L;
     int medication_id;
+    boolean status = true;     // if new data then true, if updation then false
 
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReferenceGuest, databaseReferenceMedicine, databaseReferenceMedication;
@@ -135,6 +136,71 @@ public class AddMedicationActivity extends AppCompatActivity {
         numberPicker2.setMinValue(0);
         numberPicker2.setMaxValue(meal.length - 1);
         numberPicker2.setDisplayedValues(meal);
+
+        // Getting guest_id from GuestCardAdapter.java on clicking edit button
+        // And filling it to TextFields
+        Bundle b = getIntent().getExtras();
+        if (b != null) {
+            medication_id = b.getInt("medication_id");
+            status = false;
+            databaseReferenceMedication.child("Medications").child(Integer.toString(medication_id)).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    Medication medication = dataSnapshot.getValue(Medication.class);
+                    if (medication != null) {
+                        spinner1.setSelection(guests_id_list.indexOf(medication.getGuest_id()));
+                        spinner2.setSelection(medicines_id_list.indexOf(medication.getMedicine_id()));
+                        String bda_s = medication.getSchedule().split(" ")[0];
+                        switch (bda_s) {
+                            case "Before":
+                                numberPicker1.setValue(0);
+                                break;
+                            case "During":
+                                numberPicker1.setValue(1);
+                                break;
+                            case "After":
+                                numberPicker1.setValue(2);
+                                break;
+                        }
+                        String meal_s = medication.getSchedule().split(" ")[1];
+                        switch (meal_s) {
+                            case "Breakfast":
+                                numberPicker2.setValue(0);
+                                break;
+                            case "Lunch":
+                                numberPicker2.setValue(1);
+                                break;
+                            case "Dinner":
+                                numberPicker2.setValue(2);
+                                break;
+                        }
+
+                        List dates = new ArrayList(medication.getDatesAndStatus().keySet());
+                        String start_date_month = dates.get(0).toString().split(" ")[0];
+                        String start_date_date = dates.get(0).toString().split(" ")[1];
+                        String end_date_month = dates.get(dates.size() - 1).toString().split(" ")[0];
+                        String end_date_date = dates.get(dates.size() - 1).toString().split(" ")[1];
+
+                        if (start_date_date.charAt(0) == '0')
+                            start_date_date = start_date_date.substring(1);
+                        if (end_date_date.charAt(0) == '0')
+                            end_date_date = end_date_date.substring(1);
+
+                        String start_date = start_date_date + " " + start_date_month + " 2023";
+                        String end_date = end_date_date + " " + end_date_month + " 2023";
+
+                        editText1.setText(start_date);
+                        editText2.setText(end_date);
+                    }
+                }
+
+                // Displaying the error msg in the Toast if fetching data from Firebase is unsuccessful
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Toast.makeText(AddMedicationActivity.this, "" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
 
         // Getting current date from Calendar class
         Calendar ca = Calendar.getInstance();
