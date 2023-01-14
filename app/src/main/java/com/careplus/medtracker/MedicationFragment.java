@@ -10,23 +10,17 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.careplus.medtracker.adapter.HospitalizationCardAdapter;
 import com.careplus.medtracker.adapter.MedicationCardAdapter;
-import com.careplus.medtracker.model.Hospitalization;
 import com.careplus.medtracker.model.Medication;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
@@ -66,7 +60,7 @@ public class MedicationFragment extends Fragment {
         pref = getContext().getSharedPreferences("login", Context.MODE_PRIVATE);
         String old_age_home_name = pref.getString("old_age_home_name", "");
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference(old_age_home_name + "/Medication/Medications");
+        databaseReference = firebaseDatabase.getReference(old_age_home_name + "Medication/Medications");
         recyclerView.setHasFixedSize(false);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         list = new ArrayList<>();

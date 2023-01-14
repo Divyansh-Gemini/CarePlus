@@ -15,15 +15,16 @@ public class SplashActivity extends AppCompatActivity {
     String date = "";
     String month, month_date;
 
-    SharedPreferences pref;
+    SharedPreferences pref_date, pref_login;
     SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        pref = getSharedPreferences("todays_date", Context.MODE_PRIVATE);
-        editor = pref.edit();
+        pref_date = getSharedPreferences("todays_date", Context.MODE_PRIVATE);
+        pref_login = getSharedPreferences("login", Context.MODE_PRIVATE);
+        editor = pref_date.edit();
 
         String[] months = getResources().getStringArray(R.array.months);
 
@@ -47,6 +48,8 @@ public class SplashActivity extends AppCompatActivity {
 
         // Going to LoginActivity after 1500 ms
         new Handler().postDelayed(() -> {
+            if (pref_login.getBoolean("login", false))
+                startActivity(new Intent(SplashActivity.this, MainActivity.class));
             startActivity(new Intent(SplashActivity.this, LoginActivity.class));
             finish();
         }, 1500);

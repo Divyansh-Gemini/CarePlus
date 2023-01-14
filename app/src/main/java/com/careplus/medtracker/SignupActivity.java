@@ -21,9 +21,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-import java.util.Locale;
-
-public class LoginActivity extends AppCompatActivity {
+public class SignupActivity extends AppCompatActivity {
     TextInputLayout textInputLayout1, textInputLayout2, textInputLayout3;
     TextInputEditText editText1, editText2, editText3;
     AppCompatImageButton btn;
@@ -36,7 +34,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_signup);
         textInputLayout1 = findViewById(R.id.textInputLayout1);
         textInputLayout2 = findViewById(R.id.textInputLayout2);
         textInputLayout3 = findViewById(R.id.textInputLayout3);
@@ -98,27 +96,26 @@ public class LoginActivity extends AppCompatActivity {
                     textInputLayout1.setError(null);
                     textInputLayout2.setError(null);
                     textInputLayout3.setError("Enter Password");}
-                else
-                {
+                else {
                     // Removing error texts (if any)
                     textInputLayout1.setError(null);
                     textInputLayout2.setError(null);
                     textInputLayout3.setError(null);
 
                     //#################### ACTUAL CODE FOR LOGIN ####################
-                    auth.signInWithEmailAndPassword(email, password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                    auth.createUserWithEmailAndPassword(email, password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                         @Override
                         public void onSuccess(AuthResult authResult) {
                             editor.putString("old_age_home_name", old_age_home_name);
                             editor.putBoolean("login", true);
                             editor.commit();
-                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                            Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(SignupActivity.this, MainActivity.class));
+                            Toast.makeText(SignupActivity.this, "Registered successfully", Toast.LENGTH_SHORT).show();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(LoginActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SignupActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -128,7 +125,7 @@ public class LoginActivity extends AppCompatActivity {
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(LoginActivity.this, SignupActivity.class));
+                startActivity(new Intent(SignupActivity.this, LoginActivity.class));
             }
         });
     }
