@@ -4,14 +4,19 @@ package com.careplus.medtracker;
 // Abhi idhr koi implementation nhi h
 // #################################################################################################
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +50,8 @@ public class MedicationFragment extends Fragment {
     RecyclerView recyclerView;
     FloatingActionButton fab;
 
+    SharedPreferences pref;
+    FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     MedicationCardAdapter adapter;
     ArrayList<Medication> list;
@@ -56,7 +63,10 @@ public class MedicationFragment extends Fragment {
         fab = myView.findViewById(R.id.fab);
         textView = myView.findViewById(R.id.textView);
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("Medication/Medications");
+        pref = getContext().getSharedPreferences("login", Context.MODE_PRIVATE);
+        String old_age_home_name = pref.getString("old_age_home_name", "");
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference(old_age_home_name + "/Medication/Medications");
         recyclerView.setHasFixedSize(false);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         list = new ArrayList<>();
@@ -94,6 +104,11 @@ public class MedicationFragment extends Fragment {
                             list.add(medication);    // Adding all the Medication objects (that are received from the Firebase) to the list
                         }
                     }
+
+//                    if (list.size() == 0) {
+//                        startActivity(new Intent(getActivity(), MainActivity.class));
+//                    }
+
                 }
                 adapter.notifyDataSetChanged();     // Notifying adapter (medicationCardAdapter) that the dataset has been updated
             }
@@ -109,7 +124,6 @@ public class MedicationFragment extends Fragment {
                 startActivity(new Intent(getActivity(), AddMedicationActivity.class));
             }
         });
-
         return myView;
     }
 }
