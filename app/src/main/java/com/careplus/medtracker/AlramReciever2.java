@@ -13,17 +13,19 @@ public class AlramReciever2 extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Intent i = new Intent(context,SplashActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent=PendingIntent.getActivity(context,0,i,PendingIntent.FLAG_MUTABLE);
+        PendingIntent pendingIntent2=PendingIntent.getActivity(context,2,i,PendingIntent.FLAG_MUTABLE);
         NotificationCompat.Builder builder =new NotificationCompat.Builder(context,"Lunch")
                 .setSmallIcon(R.drawable.ic_launcher_background)//icon which going to be Shown When notification is Displayed
                 .setContentTitle("Lunch Medicine Time")//Title of the Notification
                 .setContentText("Give Medicines")//Discription of the Notification
                 .setAutoCancel(true)//user press on notificaation it will Cancle
                 .setDefaults(NotificationCompat.DEFAULT_ALL)
-                .setContentIntent(pendingIntent) //se haam aapni Maan ki activity par jaa skte hai
+                .setContentIntent(pendingIntent2)//se haam aapni Maan ki activity par jaa skte hai
+                .setOngoing(true)
+                .setOnlyAlertOnce(true)
                 .setPriority(NotificationCompat.PRIORITY_MAX);//Eska mtlb Kaisa chate ho Mtlb high priority par rahe ya Kaise mtlb ki Screen Par Dikhe ya pop up ho pass
         NotificationManagerCompat notificationManagerCompat=NotificationManagerCompat.from(context);
-        notificationManagerCompat.notify(123,builder.build());//this will show The Notification
+        notificationManagerCompat.notify(124,builder.build());//this will show The Notification
 
     }
 }

@@ -5,6 +5,7 @@ package com.careplus.medtracker;
 // #################################################################################################
 
 import android.app.AlarmManager;
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -52,12 +53,6 @@ public class SettingsFragment extends Fragment {
     DatabaseReference databaseReference;
 
     private MaterialTimePicker timePicker;
-    private AlarmManager alarmManager;
-    private PendingIntent pendingIntent;
-    private AlarmManager alarmManager2;
-    private PendingIntent pendingIntent2;
-    private AlarmManager alarmManager3;
-    private PendingIntent pendingIntent3;
     private  Calendar calender;
     private  Calendar calender2;
     private  Calendar calender3;
@@ -273,37 +268,35 @@ public class SettingsFragment extends Fragment {
         SetAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setAlarmbreakfast();
-                setAlarmlunch();
-                setAlarmdinner();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    setAlarmbreakfast();
+                }
+                //   setAlarmlunch();
+             //  setAlarmdinner();
             }
         });
         return myView;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.S)
     private void setAlarmbreakfast() {
-        alarmManager= (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
+        AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
+        AlarmManager alarmManager2 = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
+        AlarmManager alarmManager3 = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
         Intent intent=new Intent(getActivity(),AlramReciever.class);
-        pendingIntent=PendingIntent.getBroadcast(getActivity(),0,intent,PendingIntent.FLAG_MUTABLE);
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,calender.getTimeInMillis(),
-                AlarmManager.INTERVAL_DAY,pendingIntent);
-        Toast.makeText(getActivity(), "Alram Set SuccessFully for breakFastTime: "+calender.getTime(), Toast.LENGTH_SHORT).show();
-    }
- private void setAlarmlunch() {
-        alarmManager2= (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
         Intent intent2=new Intent(getActivity(),AlramReciever2.class);
-         pendingIntent2=PendingIntent.getBroadcast(getActivity(),0,intent2,PendingIntent.FLAG_MUTABLE);
-        alarmManager2.setInexactRepeating(AlarmManager.RTC_WAKEUP,calender2.getTimeInMillis(),
-                AlarmManager.INTERVAL_DAY,pendingIntent);
-        Toast.makeText(getActivity(), "Alram Set SuccessFully for LunchTime: "+calender2.getTime(), Toast.LENGTH_SHORT).show();
-    }
-    private void setAlarmdinner() {
-        alarmManager3= (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
         Intent intent3=new Intent(getActivity(),AlramReciever3.class);
-        pendingIntent3=PendingIntent.getBroadcast(getActivity(),0,intent3,PendingIntent.FLAG_MUTABLE);
-        alarmManager3.setInexactRepeating(AlarmManager.RTC_WAKEUP,calender3.getTimeInMillis(),
-                AlarmManager.INTERVAL_DAY,pendingIntent);
-        Toast.makeText(getActivity(), "Alram Set SuccessFully for DinnerTime: "+calender3.getTime(), Toast.LENGTH_SHORT).show();
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 1, intent, PendingIntent.FLAG_MUTABLE);
+        PendingIntent pendingIntent2 = PendingIntent.getBroadcast(getActivity(), 2, intent2, PendingIntent.FLAG_MUTABLE);
+        PendingIntent pendingIntent3 = PendingIntent.getBroadcast(getActivity(), 3, intent3, PendingIntent.FLAG_MUTABLE);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP,calender.getTimeInMillis(),
+                pendingIntent);
+        alarmManager2.setExact(AlarmManager.RTC_WAKEUP,calender2.getTimeInMillis(),
+                pendingIntent2);
+        alarmManager3.setExact(AlarmManager.RTC_WAKEUP,calender3.getTimeInMillis(),
+                pendingIntent3);
+
+        Toast.makeText(getActivity(), "Alram Set SuccessFully for breakFastTime: "+calender.getTime(), Toast.LENGTH_SHORT).show();
     }
 
     public static String covertTimeFormat(int hours, int minutes)
@@ -332,7 +325,16 @@ public class SettingsFragment extends Fragment {
             int importance= NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel channel=new NotificationChannel("BreakFast",name,importance);
             channel.setDescription(description);
-            NotificationManager notificationManager=getContext().getSystemService(NotificationManager.class);
+            channel.enableLights(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            channel.canBubble();
+        }
+        channel.canBypassDnd();
+        channel.enableVibration(true);
+        channel.getLockscreenVisibility();
+        channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+        channel.enableLights(true);
+        NotificationManager notificationManager=getContext().getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
 
     }
@@ -344,6 +346,15 @@ public class SettingsFragment extends Fragment {
             int importance= NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel channel=new NotificationChannel("Lunch",name,importance);
             channel.setDescription(description);
+        channel.enableLights(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            channel.canBubble();
+        }
+        channel.canBypassDnd();
+        channel.enableVibration(true);
+        channel.getLockscreenVisibility();
+        channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+        channel.enableLights(true);
             NotificationManager notificationManager=getContext().getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
 
@@ -356,6 +367,15 @@ public class SettingsFragment extends Fragment {
             int importance= NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel channel=new NotificationChannel("Dinner",name,importance);
             channel.setDescription(description);
+        channel.enableLights(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            channel.canBubble();
+        }
+        channel.canBypassDnd();
+        channel.enableVibration(true);
+        channel.getLockscreenVisibility();
+        channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+        channel.enableLights(true);
             NotificationManager notificationManager=getContext().getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
 
