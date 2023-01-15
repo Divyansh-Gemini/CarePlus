@@ -5,11 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:src="@drawable/careplus_logo_transparent_bg"
-        android:layout_width="30sp"
-        android:layout_height="30sp"/>
+<!--    <ImageView-->
+<!--        android:id="@+id/imageView"-->
+<!--        android:src="@drawable/careplus_logo_transparent_bg"-->
+<!--        android:layout_width="30sp"-->
+<!--        android:layout_height="30sp"/>-->
 
     <LinearLayout
         android:layout_marginStart="10sp"
