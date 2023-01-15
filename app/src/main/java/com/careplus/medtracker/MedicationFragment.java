@@ -83,26 +83,68 @@ public class MedicationFragment extends Fragment {
         month = months[mm].substring(0,3);
         month_date = month + " " + date;
 
+        Intent intent = getActivity().getIntent();
+        Bundle b = intent.getExtras();
+        String filter_meal = "";
+        if (b != null) {
+            filter_meal = b.getString("notification");
+        }
+
         // Pulling value from Firebase in alphabetically order of medicationName
+        String finalFilter_meal = filter_meal;
         databaseReference.orderByChild("medicationName").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Medication medication = dataSnapshot.getValue(Medication.class);
-                    List dates = new ArrayList(medication.getDatesAndStatus().keySet());
-                    Map<String, Boolean> dates_and_status = medication.getDatesAndStatus();
+                    switch (finalFilter_meal) {
+                        case "breakfast":
+                            if (medication.getSchedule().split(" ")[1].equals("Breakfast")) {
+                                List dates = new ArrayList(medication.getDatesAndStatus().keySet());
+                                Map<String, Boolean> dates_and_status = medication.getDatesAndStatus();
 
-                    for (int i = 0; i < dates.size(); i++) {
-                        if (dates.get(i).equals(month_date) && dates_and_status.get(dates.get(i)) == false) {
-                            list.add(medication);    // Adding all the Medication objects (that are received from the Firebase) to the list
-                        }
+                                for (int i = 0; i < dates.size(); i++) {
+                                    if (dates.get(i).equals(month_date) && dates_and_status.get(dates.get(i)) == false) {
+                                        list.add(medication);    // Adding all the Medication objects (that are received from the Firebase) to the list
+                                    }
+                                }
+                            }
+                            break;
+                        case "lunch":
+                            if (medication.getSchedule().split(" ")[1].equals("Lunch")) {
+                                List dates = new ArrayList(medication.getDatesAndStatus().keySet());
+                                Map<String, Boolean> dates_and_status = medication.getDatesAndStatus();
+
+                                for (int i = 0; i < dates.size(); i++) {
+                                    if (dates.get(i).equals(month_date) && dates_and_status.get(dates.get(i)) == false) {
+                                        list.add(medication);    // Adding all the Medication objects (that are received from the Firebase) to the list
+                                    }
+                                }
+                            }
+                            break;
+                        case "dinner":
+                            if (medication.getSchedule().split(" ")[1].equals("Dinner")) {
+                                List dates = new ArrayList(medication.getDatesAndStatus().keySet());
+                                Map<String, Boolean> dates_and_status = medication.getDatesAndStatus();
+
+                                for (int i = 0; i < dates.size(); i++) {
+                                    if (dates.get(i).equals(month_date) && dates_and_status.get(dates.get(i)) == false) {
+                                        list.add(medication);    // Adding all the Medication objects (that are received from the Firebase) to the list
+                                    }
+                                }
+                            }
+                            break;
+                        default:
+                            List dates = new ArrayList(medication.getDatesAndStatus().keySet());
+                            Map<String, Boolean> dates_and_status = medication.getDatesAndStatus();
+
+                            for (int i = 0; i < dates.size(); i++) {
+                                if (dates.get(i).equals(month_date) && dates_and_status.get(dates.get(i)) == false) {
+                                    list.add(medication);    // Adding all the Medication objects (that are received from the Firebase) to the list
+                                }
+                            }
                     }
-
-//                    if (list.size() == 0) {
-//                        startActivity(new Intent(getActivity(), MainActivity.class));
-//                    }
-
                 }
                 adapter.notifyDataSetChanged();     // Notifying adapter (medicationCardAdapter) that the dataset has been updated
             }

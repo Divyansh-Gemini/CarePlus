@@ -41,6 +41,7 @@ import java.util.Calendar;
 
 public class SettingsFragment extends Fragment {
     EditText editText1, editText2, editText3;
+    Button SetAlarm;
     int breakfast_hour, breakfast_minute, lunch_hour, lunch_minute, dinner_hour, dinner_minute;
 
     SharedPreferences pref;
@@ -52,7 +53,6 @@ public class SettingsFragment extends Fragment {
     private Calendar calender2;
     private Calendar calender3;
 
-    Button SetAlarm;
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -263,9 +263,9 @@ public class SettingsFragment extends Fragment {
         AlarmManager alarmManager2 = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
         AlarmManager alarmManager3 = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
 
-        Intent intent1 = new Intent(getActivity(), AlramReciever.class);
-        Intent intent2 = new Intent(getActivity(), AlramReciever2.class);
-        Intent intent3 = new Intent(getActivity(), AlramReciever3.class);
+        Intent intent1 = new Intent(getActivity(), AlarmReceiver1.class);
+        Intent intent2 = new Intent(getActivity(), AlarmReceiver2.class);
+        Intent intent3 = new Intent(getActivity(), AlarmReceiver3.class);
 
         PendingIntent pendingIntent1 = PendingIntent.getBroadcast(getActivity(), 1, intent1, PendingIntent.FLAG_MUTABLE);
         PendingIntent pendingIntent2 = PendingIntent.getBroadcast(getActivity(), 2, intent2, PendingIntent.FLAG_MUTABLE);

@@ -305,16 +305,16 @@ public class AddMedicationActivity extends AppCompatActivity {
                 String start_date = editText1.getText().toString();
                 String end_date = editText2.getText().toString();
 
-//                if (spinner1 == null || spinner1.getSelectedItemPosition() < 1)
-//                    textView1.setError("Select a Guest");
-//                else if (spinner2 == null || spinner2.getSelectedItemPosition() < 1)
-//                    textView2.setError("Select a Medicine");
-//                else if (start_date.isEmpty())
-//                    editText1.setError("Select Start Date");
-//                else if (end_date.isEmpty())
-//                    editText2.setError("Select End Date");
-//                else
-//                {
+                if (spinner1 == null || spinner1.getSelectedItemPosition() < 1)
+                    textView1.setError("Select a Guest");
+                else if (spinner2 == null || spinner2.getSelectedItemPosition() < 1)
+                    textView2.setError("Select a Medicine");
+                else if (start_date.isEmpty())
+                    editText1.setError("Select Start Date");
+                else if (end_date.isEmpty())
+                    editText2.setError("Select End Date");
+                else
+                {
                     textView1.setError(null);
                     textView2.setError(null);
                     textView3.setError(null);
@@ -355,15 +355,15 @@ public class AddMedicationActivity extends AppCompatActivity {
                             Toast.makeText(AddMedicationActivity.this, "Error:" + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
-//                }
+                }
             }
         });
     }
 
     public static List<String> getDatesBetween(String startDate, String endDate) {
-        List<String> s=new ArrayList<>();
-        long  from= Date.parse(startDate);
-        long to=Date.parse(endDate);
+        List<String> s = new ArrayList<>();
+        long  from = Date.parse(startDate);
+        long to = Date.parse(endDate);
         int x = 0;
 
         while (from <= to) {
