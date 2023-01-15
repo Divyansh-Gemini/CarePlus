@@ -249,15 +249,13 @@ public class SettingsFragment extends Fragment {
         SetAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                     setAlarm();
-                }
             }
         });
         return myView;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.S)
+
     private void setAlarm() {
         AlarmManager alarmManager1 = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
         AlarmManager alarmManager2 = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
