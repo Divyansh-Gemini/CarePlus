@@ -60,7 +60,7 @@ public class MedicationFragment extends Fragment {
         pref = getContext().getSharedPreferences("login", Context.MODE_PRIVATE);
         String old_age_home_name = pref.getString("old_age_home_name", "");
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference(old_age_home_name + "Medication/Medications");
+        databaseReference = firebaseDatabase.getReference(old_age_home_name + "/Medication/Medications");
         recyclerView.setHasFixedSize(false);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         list = new ArrayList<>();

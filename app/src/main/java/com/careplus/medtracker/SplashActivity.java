@@ -50,7 +50,8 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(() -> {
             if (pref_login.getBoolean("login", false))
                 startActivity(new Intent(SplashActivity.this, MainActivity.class));
-            startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+            else
+                startActivity(new Intent(SplashActivity.this, LoginActivity.class));
             finish();
         }, 1500);
     }

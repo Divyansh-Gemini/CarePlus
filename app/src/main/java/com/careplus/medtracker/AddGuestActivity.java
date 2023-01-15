@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.DatePicker;
@@ -41,6 +43,7 @@ public class AddGuestActivity extends AppCompatActivity {
     int guest_id;
     boolean status = true;     // if new data then true, if updation then false
 
+    SharedPreferences pref;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
 
@@ -62,8 +65,10 @@ public class AddGuestActivity extends AppCompatActivity {
         editText6 = findViewById(R.id.editText6);
         btn = findViewById(R.id.button);
 
+        pref = getSharedPreferences("login", Context.MODE_PRIVATE);
+        String old_age_home_name = pref.getString("old_age_home_name", "");
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("Guest");
+        databaseReference = firebaseDatabase.getReference(old_age_home_name + "/Guest");
 
         // Getting guest_id from GuestCardAdapter.java on clicking edit button
         // And filling it to TextFields

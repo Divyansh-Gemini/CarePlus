@@ -32,6 +32,7 @@ public class AddHospitalActivity extends AppCompatActivity {
     int hospital_id;
     boolean status = true;     // if new data then true, if updation then false
 
+    SharedPreferences pref;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
 
@@ -47,8 +48,10 @@ public class AddHospitalActivity extends AppCompatActivity {
         editText4 = findViewById(R.id.editText4);
         btn = findViewById(R.id.button);
 
+        pref = getSharedPreferences("login", Context.MODE_PRIVATE);
+        String old_age_home_name = pref.getString("old_age_home_name", "");
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("Hospital");
+        databaseReference = firebaseDatabase.getReference(old_age_home_name + "/Hospital");
 
         // Getting guest_id from GuestCardAdapter.java on clicking edit button
         // And filling it to TextFields

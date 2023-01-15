@@ -4,7 +4,9 @@ package com.careplus.medtracker;
 // This is the fragment where cards of Guests are shown in RecyclerView
 // #################################################################################################
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +34,7 @@ public class GuestsFragment extends Fragment {
     RecyclerView recyclerView;
     FloatingActionButton fab;
 
+    SharedPreferences pref;
     DatabaseReference databaseReference;
     GuestCardAdapter adapter;
     ArrayList<Guest> list;
@@ -42,7 +45,9 @@ public class GuestsFragment extends Fragment {
         recyclerView = myView.findViewById(R.id.recyclerView);
         fab = myView.findViewById(R.id.fab);
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("Guest/Guests");
+        pref = getContext().getSharedPreferences("login", Context.MODE_PRIVATE);
+        String old_age_home_name = pref.getString("old_age_home_name", "");
+        databaseReference = FirebaseDatabase.getInstance().getReference(old_age_home_name + "/Guest/Guests");
         recyclerView.setHasFixedSize(false);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         list = new ArrayList<>();

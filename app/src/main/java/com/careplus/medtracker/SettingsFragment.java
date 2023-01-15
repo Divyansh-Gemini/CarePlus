@@ -9,9 +9,9 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -24,13 +24,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.careplus.medtracker.R;
-import com.careplus.medtracker.model.ID;
 import com.careplus.medtracker.model.MealsTime;
-import com.careplus.medtracker.model.Medicine;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.timepicker.MaterialTimePicker;
@@ -41,21 +37,21 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.List;
 
 public class SettingsFragment extends Fragment {
     EditText editText1, editText2, editText3;
     int breakfast_hour, breakfast_minute, lunch_hour, lunch_minute, dinner_hour, dinner_minute;
 
+    SharedPreferences pref;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
 
     private MaterialTimePicker timePicker;
-    private  Calendar calender;
-    private  Calendar calender2;
-    private  Calendar calender3;
+    private Calendar calender1;
+    private Calendar calender2;
+    private Calendar calender3;
+
     Button SetAlarm;
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -65,8 +61,10 @@ public class SettingsFragment extends Fragment {
         editText2 = myView.findViewById(R.id.editText2);
         editText3 = myView.findViewById(R.id.editText3);
         SetAlarm=myView.findViewById(R.id.SetAlarm);
+        pref = getContext().getSharedPreferences("login", Context.MODE_PRIVATE);
+        String old_age_home_name = pref.getString("old_age_home_name", "");
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("MealsTime");
+        databaseReference = firebaseDatabase.getReference(old_age_home_name + "/MealsTime");
         Calendar ca = Calendar.getInstance();
         createNotificationMethod1();
         createNotificationMethod2();
@@ -84,7 +82,6 @@ public class SettingsFragment extends Fragment {
                     breakfast_minute = mealsTime.getMeal_minute();
                 }
                 editText1.setText(covertTimeFormat(breakfast_hour, breakfast_minute));
-//                editText2.setText(lunch_hour+" : "+lunch_minute+SettingsFragment.covertTimeFormat(lunch_hour,lunch_minute));
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -105,8 +102,6 @@ public class SettingsFragment extends Fragment {
                     lunch_minute = mealsTime.getMeal_minute();
                 }
                 editText2.setText(covertTimeFormat(lunch_hour, lunch_minute));
-
-                //editText2.setText(lunch_hour+" : "+lunch_minute+SettingsFragment.covertTimeFormat(lunch_hour,lunch_minute));
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -147,18 +142,13 @@ public class SettingsFragment extends Fragment {
                 timePicker.addOnPositiveButtonClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if(timePicker.getHour()>12){
-                            editText1.setText(String.format((timePicker.getHour()-12)+" : "+String.format("%02d",timePicker.getMinute())+" PM"));
-                        }
-                        else{
-                            editText1.setText(timePicker.getHour()+" : "+timePicker.getMinute()+" AM");
-                        }
+                        editText1.setText(SettingsFragment.covertTimeFormat(timePicker.getHour(), timePicker.getMinute()));
                         //Os Din Particular time Ko set Karva lega
-                        calender= Calendar.getInstance();
-                        calender.set(Calendar.HOUR_OF_DAY,timePicker.getHour());
-                        calender.set(Calendar.MINUTE,timePicker.getMinute());
-                        calender.set(Calendar.SECOND,0);
-                        calender.set(Calendar.MILLISECOND,0);
+                        calender1 = Calendar.getInstance();
+                        calender1.set(Calendar.HOUR_OF_DAY,timePicker.getHour());
+                        calender1.set(Calendar.MINUTE,timePicker.getMinute());
+                        calender1.set(Calendar.SECOND,0);
+                        calender1.set(Calendar.MILLISECOND,0);
                         breakfast_hour = timePicker.getHour();
                         breakfast_minute = timePicker.getMinute();
                         MealsTime mealsTime = new MealsTime(breakfast_hour, breakfast_minute);
@@ -192,12 +182,7 @@ public class SettingsFragment extends Fragment {
                 timePicker.addOnPositiveButtonClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if(timePicker.getHour()>12){
-                            editText2.setText(String.format((timePicker.getHour()-12)+" : "+String.format("%02d",timePicker.getMinute())+" PM"));
-                        }
-                        else{
-                            editText2.setText(timePicker.getHour()+" : "+timePicker.getMinute()+" AM");
-                        }
+                        editText2.setText(SettingsFragment.covertTimeFormat(timePicker.getHour(), timePicker.getMinute()));
                         //Os Din Particular time Ko set Karva lega
                         calender2= Calendar.getInstance();
                         calender2.set(Calendar.HOUR_OF_DAY,timePicker.getHour());
@@ -232,16 +217,11 @@ public class SettingsFragment extends Fragment {
                         .setMinute(dinner_minute)
                         .setTitleText("Time For medicines")
                         .build();
-                timePicker.show(requireFragmentManager(),"Careplus");
+                timePicker.show(requireFragmentManager(),"CarePlus");
                 timePicker.addOnPositiveButtonClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if(timePicker.getHour()>12){
-                            editText3.setText(String.format((timePicker.getHour()-12)+" : "+String.format("%02d",timePicker.getMinute())+" PM"));
-                        }
-                        else{
-                            editText3.setText(timePicker.getHour()+" : "+timePicker.getMinute()+" AM");
-                        }
+                        editText3.setText(SettingsFragment.covertTimeFormat(timePicker.getHour(), timePicker.getMinute()));
                         //Os Din Particular time Ko set Karva lega
                         calender3= Calendar.getInstance();
                         calender3.set(Calendar.HOUR_OF_DAY,timePicker.getHour());
@@ -265,38 +245,37 @@ public class SettingsFragment extends Fragment {
                 });
             }
         });
+
         SetAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    setAlarmbreakfast();
+                    setAlarm();
                 }
-                //   setAlarmlunch();
-             //  setAlarmdinner();
             }
         });
         return myView;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.S)
-    private void setAlarmbreakfast() {
-        AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
+    private void setAlarm() {
+        AlarmManager alarmManager1 = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
         AlarmManager alarmManager2 = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
         AlarmManager alarmManager3 = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
-        Intent intent=new Intent(getActivity(),AlramReciever.class);
-        Intent intent2=new Intent(getActivity(),AlramReciever2.class);
-        Intent intent3=new Intent(getActivity(),AlramReciever3.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 1, intent, PendingIntent.FLAG_MUTABLE);
+
+        Intent intent1 = new Intent(getActivity(), AlramReciever.class);
+        Intent intent2 = new Intent(getActivity(), AlramReciever2.class);
+        Intent intent3 = new Intent(getActivity(), AlramReciever3.class);
+
+        PendingIntent pendingIntent1 = PendingIntent.getBroadcast(getActivity(), 1, intent1, PendingIntent.FLAG_MUTABLE);
         PendingIntent pendingIntent2 = PendingIntent.getBroadcast(getActivity(), 2, intent2, PendingIntent.FLAG_MUTABLE);
         PendingIntent pendingIntent3 = PendingIntent.getBroadcast(getActivity(), 3, intent3, PendingIntent.FLAG_MUTABLE);
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP,calender.getTimeInMillis(),
-                pendingIntent);
-        alarmManager2.setExact(AlarmManager.RTC_WAKEUP,calender2.getTimeInMillis(),
-                pendingIntent2);
-        alarmManager3.setExact(AlarmManager.RTC_WAKEUP,calender3.getTimeInMillis(),
-                pendingIntent3);
 
-        Toast.makeText(getActivity(), "Alram Set SuccessFully for breakFastTime: "+calender.getTime(), Toast.LENGTH_SHORT).show();
+        alarmManager1.setExact(AlarmManager.RTC_WAKEUP, calender1.getTimeInMillis(), pendingIntent1);
+        alarmManager2.setExact(AlarmManager.RTC_WAKEUP, calender2.getTimeInMillis(), pendingIntent2);
+        alarmManager3.setExact(AlarmManager.RTC_WAKEUP, calender3.getTimeInMillis(), pendingIntent3);
+
+        Toast.makeText(getActivity(), "Alarm set successfully", Toast.LENGTH_SHORT).show();
     }
 
     public static String covertTimeFormat(int hours, int minutes)

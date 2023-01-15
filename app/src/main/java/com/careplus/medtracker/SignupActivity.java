@@ -14,12 +14,16 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.careplus.medtracker.model.ID;
+import com.careplus.medtracker.model.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class SignupActivity extends AppCompatActivity {
     TextInputLayout textInputLayout1, textInputLayout2, textInputLayout3;
@@ -29,6 +33,8 @@ public class SignupActivity extends AppCompatActivity {
     FirebaseAuth auth;
     SharedPreferences pref;
     SharedPreferences.Editor editor;
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference databaseReference;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -46,6 +52,8 @@ public class SignupActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         pref = getSharedPreferences("login", Context.MODE_PRIVATE);
         editor = pref.edit();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference();
 
         // Old Age Home Name wale editText ko touch krne pr error wala text chla jana chahiye
         editText1.setOnTouchListener(new View.OnTouchListener() {
@@ -109,6 +117,21 @@ public class SignupActivity extends AppCompatActivity {
                             editor.putString("old_age_home_name", old_age_home_name);
                             editor.putBoolean("login", true);
                             editor.commit();
+
+                            User user = new User(old_age_home_name, email, password);
+                            // Uploading User data to Firebase Database
+                            databaseReference.child("Users").child(old_age_home_name).setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(SignupActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
                             startActivity(new Intent(SignupActivity.this, MainActivity.class));
                             Toast.makeText(SignupActivity.this, "Registered successfully", Toast.LENGTH_SHORT).show();
                         }

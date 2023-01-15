@@ -4,12 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.careplus.medtracker.AddMedicationActivity;
 import com.careplus.medtracker.R;
 import com.careplus.medtracker.model.Guest;
-import com.careplus.medtracker.model.ID;
 import com.careplus.medtracker.model.Medicine;
 import com.careplus.medtracker.model.Medication;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -33,7 +29,6 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Map;
 
 // #################################################################################################
@@ -46,17 +41,27 @@ public class MedicationCardAdapter extends RecyclerView.Adapter<MedicationCardAd
     Context context;
     ArrayList<Medication> medication_list;
 
-    // for SharedPreference
-    SharedPreferences pref;
+    SharedPreferences pref_todays_date;
+    SharedPreferences pref_login;
     SharedPreferences.Editor editor;
+
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference databaseReferenceGuest, databaseReferenceMedicine, databaseReferenceMedication;
 
     public MedicationCardAdapter(Context context, ArrayList<Medication> medication_list) {
         this.context = context;
         this.medication_list = medication_list;
 
         // for SharedPreference
-        pref = context.getSharedPreferences("todays_date", Context.MODE_PRIVATE);
-        editor = pref.edit();
+        pref_todays_date = context.getSharedPreferences("todays_date", Context.MODE_PRIVATE);
+        editor = pref_todays_date.edit();
+        pref_login = context.getSharedPreferences("login", Context.MODE_PRIVATE);
+        String old_age_home_name = pref_login.getString("old_age_home_name", "");
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReferenceGuest = firebaseDatabase.getReference(old_age_home_name + "/Guest/Guests");
+        databaseReferenceMedicine = firebaseDatabase.getReference(old_age_home_name + "/Medicine/Medicines");
+        databaseReferenceMedication = firebaseDatabase.getReference(old_age_home_name + "/Medication");
     }
 
     // MedicationViewHolder is inner class & MedicationCardAdapter is outer class
@@ -69,10 +74,6 @@ public class MedicationCardAdapter extends RecyclerView.Adapter<MedicationCardAd
         String date = "";
         String month, month_date;
 
-        // for FirebaseDatabase
-        FirebaseDatabase firebaseDatabase;
-        DatabaseReference databaseReferenceGuest, databaseReferenceMedicine, databaseReferenceMedication;
-
         public MedicationViewHolder(@NonNull View itemView) {
             super(itemView);
             textView1 = itemView.findViewById(R.id.textView1);
@@ -82,11 +83,6 @@ public class MedicationCardAdapter extends RecyclerView.Adapter<MedicationCardAd
             btn_taken = itemView.findViewById(R.id.button);
             btn_edit = itemView.findViewById(R.id.button1);
             btn_more = itemView.findViewById(R.id.button2);
-
-            firebaseDatabase = FirebaseDatabase.getInstance();
-            databaseReferenceGuest = firebaseDatabase.getReference("Guest/Guests");
-            databaseReferenceMedicine = firebaseDatabase.getReference("Medicine/Medicines");
-            databaseReferenceMedication = firebaseDatabase.getReference("Medication");
         }
     }
 
@@ -102,7 +98,7 @@ public class MedicationCardAdapter extends RecyclerView.Adapter<MedicationCardAd
         Medication medication = medication_list.get(position);
 
         // Getting guestName from firebase using guestID which we got from medication object and setting it to the textView
-        holder.databaseReferenceGuest.child(Integer.toString(medication.getGuest_id())).addValueEventListener(new ValueEventListener() {
+        databaseReferenceGuest.child(Integer.toString(medication.getGuest_id())).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Guest guest = dataSnapshot.getValue(Guest.class);
@@ -115,7 +111,7 @@ public class MedicationCardAdapter extends RecyclerView.Adapter<MedicationCardAd
         });
 
         // Getting medicineName from firebase using medicineID which we got from medication object and setting it to the textView
-        holder.databaseReferenceMedicine.child(Integer.toString(medication.getMedicine_id())).addValueEventListener(new ValueEventListener() {
+        databaseReferenceMedicine.child(Integer.toString(medication.getMedicine_id())).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Medicine medicine = dataSnapshot.getValue(Medicine.class);
@@ -130,7 +126,7 @@ public class MedicationCardAdapter extends RecyclerView.Adapter<MedicationCardAd
         holder.textView3.setText(medication.getSchedule());
         holder.imageView.setImageResource(R.drawable.old_man_avatar);
 
-        holder.month_date = pref.getString("month_date", "0");
+        holder.month_date = pref_todays_date.getString("month_date", "0");
 
         //##################### Taken Button #####################
         holder.btn_taken.setOnClickListener(new View.OnClickListener() {
@@ -148,7 +144,7 @@ public class MedicationCardAdapter extends RecyclerView.Adapter<MedicationCardAd
                 Medication medication = new Medication(medication_id, guest_id, medicine_id, schedule, dates_and_status);
 
                 // Updating Medication data to Firebase Database
-                holder.databaseReferenceMedication.child("Medications").child(Integer.toString(medication_id)).setValue(medication).addOnSuccessListener(new OnSuccessListener<Void>() {
+                databaseReferenceMedication.child("Medications").child(Integer.toString(medication_id)).setValue(medication).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused)
                     {   }
@@ -176,7 +172,7 @@ public class MedicationCardAdapter extends RecyclerView.Adapter<MedicationCardAd
         holder.btn_more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Query query = holder.databaseReferenceMedication.child("Medications").child(String.valueOf(medication.getMedication_id()));
+                Query query = databaseReferenceMedication.child("Medications").child(String.valueOf(medication.getMedication_id()));
                 query.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {

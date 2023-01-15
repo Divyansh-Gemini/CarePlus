@@ -2,6 +2,7 @@ package com.careplus.medtracker.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,10 +37,18 @@ import java.util.ArrayList;
 public class MedicineCardAdapter extends RecyclerView.Adapter<MedicineCardAdapter.MedicineViewHolder> {
     Context context;
     ArrayList<Medicine> medicine_list;
+    SharedPreferences pref;
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference databaseReference;
 
     public MedicineCardAdapter(Context context, ArrayList<Medicine> medicine_list) {
         this.context = context;
         this.medicine_list = medicine_list;
+
+        pref = context.getSharedPreferences("login", Context.MODE_PRIVATE);
+        String old_age_home_name = pref.getString("old_age_home_name", "");
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference(old_age_home_name + "/Medicine");
     }
 
     // MedicineViewHolder is inner class & MedicineCardAdapter is outer class
@@ -48,9 +57,6 @@ public class MedicineCardAdapter extends RecyclerView.Adapter<MedicineCardAdapte
         ImageView imageView;
         ImageButton btn_edit, btn_more;
 
-        FirebaseDatabase firebaseDatabase;
-        DatabaseReference databaseReference;
-
         public MedicineViewHolder(@NonNull View itemView) {
             super(itemView);
             textView1 = itemView.findViewById(R.id.textView1);
@@ -58,9 +64,6 @@ public class MedicineCardAdapter extends RecyclerView.Adapter<MedicineCardAdapte
             imageView = itemView.findViewById(R.id.imageView);
             btn_edit = itemView.findViewById(R.id.button1);
             btn_more = itemView.findViewById(R.id.button2);
-
-            firebaseDatabase = FirebaseDatabase.getInstance();
-            databaseReference = firebaseDatabase.getReference("Medicine");
         }
     }
 
@@ -74,7 +77,10 @@ public class MedicineCardAdapter extends RecyclerView.Adapter<MedicineCardAdapte
     @Override
     public void onBindViewHolder(@NonNull MedicineCardAdapter.MedicineViewHolder holder, int position) {
         Medicine medicine = medicine_list.get(position);
-        holder.textView1.setText(medicine.getMedicineName());
+        if (medicine.getMedicineName().length() > 22)
+            holder.textView1.setText(medicine.getMedicineName().substring(0,21) + "..");
+        else
+            holder.textView1.setText(medicine.getMedicineName());
         holder.textView2.setText(medicine.getMedicineCompany());
         holder.imageView.setImageResource(R.drawable.image_medicine);
 
@@ -102,7 +108,7 @@ public class MedicineCardAdapter extends RecyclerView.Adapter<MedicineCardAdapte
                         {
                             //##################### Delete Button #####################
                             case R.id.item1:
-                                Query query = holder.databaseReference.child("Medicines").orderByChild("medicineID").equalTo(medicine.getMedicineID());
+                                Query query = databaseReference.child("Medicines").orderByChild("medicineID").equalTo(medicine.getMedicineID());
                                 query.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {

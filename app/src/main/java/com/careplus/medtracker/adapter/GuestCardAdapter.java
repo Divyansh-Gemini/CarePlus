@@ -2,6 +2,7 @@ package com.careplus.medtracker.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,10 +36,18 @@ import java.util.ArrayList;
 public class GuestCardAdapter extends RecyclerView.Adapter<GuestCardAdapter.GuestViewHolder> {
     Context context;
     ArrayList<Guest> guest_list;
+    SharedPreferences pref;
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference databaseReference;
 
     public GuestCardAdapter(Context context, ArrayList<Guest> guest_list) {
         this.context = context;
         this.guest_list = guest_list;
+
+        pref = context.getSharedPreferences("login", Context.MODE_PRIVATE);
+        String old_age_home_name = pref.getString("old_age_home_name", "");
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference(old_age_home_name + "/Guest");
     }
 
     // GuestViewHolder is inner class & GuestCardAdapter is outer class
@@ -46,18 +55,12 @@ public class GuestCardAdapter extends RecyclerView.Adapter<GuestCardAdapter.Gues
         TextView textView1, textView2;
         ImageButton btn_edit, btn_more;
 
-        FirebaseDatabase firebaseDatabase;
-        DatabaseReference databaseReference;
-
         public GuestViewHolder(@NonNull View itemView) {
             super(itemView);
             textView1 = itemView.findViewById(R.id.textView1);
             textView2 = itemView.findViewById(R.id.textView2);
             btn_edit = itemView.findViewById(R.id.button1);
             btn_more = itemView.findViewById(R.id.button2);
-
-            firebaseDatabase = FirebaseDatabase.getInstance();
-            databaseReference = firebaseDatabase.getReference("Guest");
         }
     }
 
@@ -98,7 +101,7 @@ public class GuestCardAdapter extends RecyclerView.Adapter<GuestCardAdapter.Gues
                         {
                             //##################### Delete Button #####################
                             case R.id.item1:
-                                Query query = holder.databaseReference.child("Guests").orderByChild("guestID").equalTo(guest.getGuestID());
+                                Query query = databaseReference.child("Guests").orderByChild("guestID").equalTo(guest.getGuestID());
                                 query.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {

@@ -66,6 +66,7 @@ public class AddMedicineActivity extends AppCompatActivity {
     ArrayList<String> medicine_names = new ArrayList<>();
     ArrayList<String> manufacturer_names = new ArrayList<>();
 
+    SharedPreferences pref;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
 
@@ -84,8 +85,10 @@ public class AddMedicineActivity extends AppCompatActivity {
         textViewUnits = findViewById(R.id.textView);
         btn = findViewById(R.id.button);
 
+        pref = getSharedPreferences("login", Context.MODE_PRIVATE);
+        String old_age_home_name = pref.getString("old_age_home_name", "");
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("Medicine");
+        databaseReference = firebaseDatabase.getReference(old_age_home_name + "/Medicine");
 
         String api_url = "https://beta.myupchar.com/api/medicine/search?api_key=dcd5391705e71bbb87ffaf683b0b8f44&name=";
 

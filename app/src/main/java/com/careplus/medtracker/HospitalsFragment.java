@@ -4,7 +4,9 @@ package com.careplus.medtracker;
 // This is the fragment where cards of Hospitals are shown in RecyclerView
 // #################################################################################################
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -33,6 +35,7 @@ public class HospitalsFragment extends Fragment {
     RecyclerView recyclerView;
     FloatingActionButton fab;
 
+    SharedPreferences pref;
     DatabaseReference databaseReference;
     HospitalCardAdapter adapter;
     ArrayList<Hospital> list;
@@ -43,7 +46,9 @@ public class HospitalsFragment extends Fragment {
         recyclerView = myView.findViewById(R.id.recyclerView);
         fab = myView.findViewById(R.id.fab);
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("Hospital/Hospitals");
+        pref = getContext().getSharedPreferences("login", Context.MODE_PRIVATE);
+        String old_age_home_name = pref.getString("old_age_home_name", "");
+        databaseReference = FirebaseDatabase.getInstance().getReference(old_age_home_name + "/Hospital/Hospitals");
         recyclerView.setHasFixedSize(false);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         list = new ArrayList<>();

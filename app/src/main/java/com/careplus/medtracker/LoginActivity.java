@@ -49,6 +49,9 @@ public class LoginActivity extends AppCompatActivity {
         pref = getSharedPreferences("login", Context.MODE_PRIVATE);
         editor = pref.edit();
 
+        if (pref.getBoolean("login", false))
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+
         // Old Age Home Name wale editText ko touch krne pr error wala text chla jana chahiye
         editText1.setOnTouchListener(new View.OnTouchListener() {
             @Override

@@ -2,6 +2,7 @@ package com.careplus.medtracker.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,10 +41,20 @@ import java.util.ArrayList;
 public class HospitalizationCardAdapter extends RecyclerView.Adapter<HospitalizationCardAdapter.HospitalizationViewHolder> {
     Context context;
     ArrayList<Hospitalization> hospitalization_list;
+    SharedPreferences pref;
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference databaseReferenceGuest, databaseReferenceHospital, databaseReferenceHospitalization;
 
     public HospitalizationCardAdapter(Context context, ArrayList<Hospitalization> hospitalization_list) {
         this.context = context;
         this.hospitalization_list = hospitalization_list;
+
+        pref = context.getSharedPreferences("login", Context.MODE_PRIVATE);
+        String old_age_home_name = pref.getString("old_age_home_name", "");
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReferenceGuest = firebaseDatabase.getReference(old_age_home_name + "/Guest/Guests");
+        databaseReferenceHospital = firebaseDatabase.getReference(old_age_home_name + "/Hospital/Hospitals");
+        databaseReferenceHospitalization = firebaseDatabase.getReference(old_age_home_name + "/Hospitalization");
     }
 
     // HospitalizationViewHolder is inner class & HospitalizationCardAdapter is outer class
@@ -51,9 +62,6 @@ public class HospitalizationCardAdapter extends RecyclerView.Adapter<Hospitaliza
         TextView textView1, textView2, textView3;
         ImageView imageView;
         ImageButton btn_edit, btn_more;
-
-        FirebaseDatabase firebaseDatabase;
-        DatabaseReference databaseReferenceGuest, databaseReferenceHospital, databaseReferenceHospitalization;
 
         public HospitalizationViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -63,11 +71,6 @@ public class HospitalizationCardAdapter extends RecyclerView.Adapter<Hospitaliza
             imageView = itemView.findViewById(R.id.imageView);
             btn_edit = itemView.findViewById(R.id.button1);
             btn_more = itemView.findViewById(R.id.button2);
-
-            firebaseDatabase = FirebaseDatabase.getInstance();
-            databaseReferenceGuest = firebaseDatabase.getReference("Guest/Guests");
-            databaseReferenceHospital = firebaseDatabase.getReference("Hospital/Hospitals");
-            databaseReferenceHospitalization = firebaseDatabase.getReference("Hospitalization");
         }
     }
 
@@ -83,7 +86,7 @@ public class HospitalizationCardAdapter extends RecyclerView.Adapter<Hospitaliza
         Hospitalization hospitalization = hospitalization_list.get(position);
 
         // Getting guestName from firebase using guestID which we got from hospitalization object and setting it to the textView
-        holder.databaseReferenceGuest.child(Integer.toString(hospitalization.getGuestID())).addValueEventListener(new ValueEventListener() {
+        databaseReferenceGuest.child(Integer.toString(hospitalization.getGuestID())).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Guest guest = dataSnapshot.getValue(Guest.class);
@@ -96,7 +99,7 @@ public class HospitalizationCardAdapter extends RecyclerView.Adapter<Hospitaliza
         });
 
         // Getting hospitalName from firebase using hospitalID which we got from hospitalization object and setting it to the textView
-        holder.databaseReferenceHospital.child(Integer.toString(hospitalization.getHospitalID())).addValueEventListener(new ValueEventListener() {
+        databaseReferenceHospital.child(Integer.toString(hospitalization.getHospitalID())).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Hospital hospital = dataSnapshot.getValue(Hospital.class);
@@ -135,7 +138,7 @@ public class HospitalizationCardAdapter extends RecyclerView.Adapter<Hospitaliza
                         {
                             //##################### Delete Button #####################
                             case R.id.item1:
-                                Query query = holder.databaseReferenceHospitalization.child("Hospitalizations").orderByChild("hospitalizationID").equalTo(hospitalization.getHospitalizationID());
+                                Query query = databaseReferenceHospitalization.child("Hospitalizations").orderByChild("hospitalizationID").equalTo(hospitalization.getHospitalizationID());
                                 query.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {

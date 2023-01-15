@@ -8,6 +8,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -37,13 +40,14 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class AddMedicationActivity extends AppCompatActivity {
-    TextView textView1, textView2;
+    TextView textView1, textView2, textView3;
     Spinner spinner1, spinner2;
     NumberPicker numberPicker1, numberPicker2;
     TextInputEditText editText1, editText2;
@@ -51,10 +55,14 @@ public class AddMedicationActivity extends AppCompatActivity {
 
     List<String> guests_name_list, medicines_name_list;
     List<Integer> guests_id_list, medicines_id_list;
+    List<String> new_dates;
+    Map<String, Boolean> dates_and_status;
+
     static final long ONE_DAY = 24 * 60 * 60 * 1000L;
     int medication_id;
     boolean status = true;     // if new data then true, if updation then false
 
+    SharedPreferences pref;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReferenceGuest, databaseReferenceMedicine, databaseReferenceMedication;
 
@@ -64,6 +72,7 @@ public class AddMedicationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_medication);
         textView1 = findViewById(R.id.textView1);
         textView2 = findViewById(R.id.textView2);
+        textView3 = findViewById(R.id.textView3);
         spinner1 = findViewById(R.id.spinner1);
         spinner2 = findViewById(R.id.spinner2);
         numberPicker1 = findViewById(R.id.numberPicker1);
@@ -72,10 +81,12 @@ public class AddMedicationActivity extends AppCompatActivity {
         editText2 = findViewById(R.id.editText2);
         btn = findViewById(R.id.button);
 
+        pref = getSharedPreferences("login", Context.MODE_PRIVATE);
+        String old_age_home_name = pref.getString("old_age_home_name", "");
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReferenceGuest = firebaseDatabase.getReference("Guest/Guests");
-        databaseReferenceMedicine = firebaseDatabase.getReference("Medicine/Medicines");
-        databaseReferenceMedication = firebaseDatabase.getReference("Medication");
+        databaseReferenceGuest = firebaseDatabase.getReference(old_age_home_name + "/Guest/Guests");
+        databaseReferenceMedicine = firebaseDatabase.getReference(old_age_home_name + "/Medicine/Medicines");
+        databaseReferenceMedication = firebaseDatabase.getReference(old_age_home_name + "/Medication");
 
         // ############### Setting values to Guest Spinner ###############
         guests_name_list = new ArrayList<>();   // Created an ArrayList
@@ -176,10 +187,13 @@ public class AddMedicationActivity extends AppCompatActivity {
                         }
 
                         List dates = new ArrayList(medication.getDatesAndStatus().keySet());
+                        Collections.sort(dates);
+
                         String start_date_month = dates.get(0).toString().split(" ")[0];
                         String start_date_date = dates.get(0).toString().split(" ")[1];
                         String end_date_month = dates.get(dates.size() - 1).toString().split(" ")[0];
                         String end_date_date = dates.get(dates.size() - 1).toString().split(" ")[1];
+
 
                         if (start_date_date.charAt(0) == '0')
                             start_date_date = start_date_date.substring(1);
@@ -188,6 +202,11 @@ public class AddMedicationActivity extends AppCompatActivity {
 
                         String start_date = start_date_date + " " + start_date_month + " 2023";
                         String end_date = end_date_date + " " + end_date_month + " 2023";
+
+                        new_dates = getDatesBetween(start_date, end_date);
+                        dates_and_status = new HashMap<String, Boolean>();
+                        for (String date : new_dates)
+                            dates_and_status.put(date.substring(4,10), false);
 
                         editText1.setText(start_date);
                         editText2.setText(end_date);
@@ -224,6 +243,7 @@ public class AddMedicationActivity extends AppCompatActivity {
         editText1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                editText1.setError(null);
                 materialDatePicker.show(getSupportFragmentManager(), "Date Picker");
             }
         });
@@ -231,6 +251,7 @@ public class AddMedicationActivity extends AppCompatActivity {
         materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
             @Override
             public void onPositiveButtonClick(Object selection) {
+                editText1.setError(null);
                 editText1.setText(materialDatePicker.getHeaderText());
             }
         });
@@ -244,31 +265,35 @@ public class AddMedicationActivity extends AppCompatActivity {
         editText2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                editText2.setError(null);
                 mdp2.show(getSupportFragmentManager(), "Date Picker");
             }
         });
         mdp2.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
             @Override
             public void onPositiveButtonClick(Object selection) {
+                editText2.setError(null);
                 editText2.setText(mdp2.getHeaderText());
             }
         });
 
         // Getting last_medication_id from Firebase Database
-        databaseReferenceMedication.child("last_medication_id").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                ID id = dataSnapshot.getValue(ID.class);
-                if (id == null)
-                    medication_id = 1;
-                else
-                    medication_id = id.getId() + 1;
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(AddMedicationActivity.this, "" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        if (status) {
+            databaseReferenceMedication.child("last_medication_id").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    ID id = dataSnapshot.getValue(ID.class);
+                    if (id == null)
+                        medication_id = 1;
+                    else
+                        medication_id = id.getId() + 1;
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Toast.makeText(AddMedicationActivity.this, "" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
 
         // Adding new medication
         btn.setOnClickListener(new View.OnClickListener() {
@@ -280,17 +305,27 @@ public class AddMedicationActivity extends AppCompatActivity {
                 String start_date = editText1.getText().toString();
                 String end_date = editText2.getText().toString();
 
-                List<String> dates = getDatesBetween(start_date, end_date);
-                Map<String, Boolean> dates_and_status = new HashMap<String, Boolean>();
-                for (String date : dates)
-                    dates_and_status.put(date.substring(4,10), false);
+//                if (spinner1 == null || spinner1.getSelectedItemPosition() < 1)
+//                    textView1.setError("Select a Guest");
+//                else if (spinner2 == null || spinner2.getSelectedItemPosition() < 1)
+//                    textView2.setError("Select a Medicine");
+//                else if (start_date.isEmpty())
+//                    editText1.setError("Select Start Date");
+//                else if (end_date.isEmpty())
+//                    editText2.setError("Select End Date");
+//                else
+//                {
+                    textView1.setError(null);
+                    textView2.setError(null);
+                    textView3.setError(null);
+                    editText1.setError(null);
+                    editText2.setError(null);
 
-                if (spinner1 == null || spinner1.getSelectedItem() == null)
-                    textView1.setError("Select a Guest");
-                else if (spinner1 == null || spinner1.getSelectedItem() == null)
-                    textView2.setError("Select a Medicine");
-                else
-                {
+                    new_dates = getDatesBetween(start_date, end_date);
+                    dates_and_status = new HashMap<String, Boolean>();
+                    for (String date : new_dates)
+                        dates_and_status.put(date.substring(4,10), false);
+
                     // Creating an object of Medication
                     Medication medication = new Medication(medication_id, guest_id, medicine_id, schedule, dates_and_status);
 
@@ -299,16 +334,18 @@ public class AddMedicationActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(Void unused) {
                             // Updating last_medication_id on Firebase
-                            databaseReferenceMedication.child("last_medication_id").setValue(new ID(medication_id)).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void unused)
-                                {   }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(AddMedicationActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            });
+                            if (status) {
+                                databaseReferenceMedication.child("last_medication_id").setValue(new ID(medication_id)).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(AddMedicationActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
                             Toast.makeText(AddMedicationActivity.this, "New Medication Added", Toast.LENGTH_SHORT).show();
                             AddMedicationActivity.this.onBackPressed();    // going back on previous page
                         }
@@ -318,7 +355,7 @@ public class AddMedicationActivity extends AppCompatActivity {
                             Toast.makeText(AddMedicationActivity.this, "Error:" + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
-                }
+//                }
             }
         });
     }

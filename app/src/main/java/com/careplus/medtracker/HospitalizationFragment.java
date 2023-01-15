@@ -4,7 +4,9 @@ package com.careplus.medtracker;
 // Abhi idhr koi implementation nhi h
 // #################################################################################################
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -35,6 +37,7 @@ public class HospitalizationFragment extends Fragment {
     RecyclerView recyclerView;
     FloatingActionButton fab;
 
+    SharedPreferences pref;
     DatabaseReference databaseReference;
     HospitalizationCardAdapter adapter;
     ArrayList<Hospitalization> list;
@@ -45,7 +48,9 @@ public class HospitalizationFragment extends Fragment {
         recyclerView = myView.findViewById(R.id.recyclerView);
         fab = myView.findViewById(R.id.fab);
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("Hospitalization/Hospitalizations");
+        pref = getContext().getSharedPreferences("login", Context.MODE_PRIVATE);
+        String old_age_home_name = pref.getString("old_age_home_name", "");
+        databaseReference = FirebaseDatabase.getInstance().getReference(old_age_home_name + "/Hospitalization/Hospitalizations");
         recyclerView.setHasFixedSize(false);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         list = new ArrayList<>();

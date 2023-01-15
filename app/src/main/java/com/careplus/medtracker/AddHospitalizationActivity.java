@@ -8,6 +8,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -49,6 +51,7 @@ public class AddHospitalizationActivity extends AppCompatActivity {
     int hospitalization_id;
     boolean status = true;     // if new data then true, if updation then false
 
+    SharedPreferences pref;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReferenceGuest, databaseReferenceHospital, databaseReferenceHospitalization;
 
@@ -64,10 +67,12 @@ public class AddHospitalizationActivity extends AppCompatActivity {
         editText2 = findViewById(R.id.editText2);
         btn = findViewById(R.id.button);
 
+        pref = getSharedPreferences("login", Context.MODE_PRIVATE);
+        String old_age_home_name = pref.getString("old_age_home_name", "");
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReferenceGuest = firebaseDatabase.getReference("Guest/Guests");
-        databaseReferenceHospital = firebaseDatabase.getReference("Hospital/Hospitals");
-        databaseReferenceHospitalization = firebaseDatabase.getReference("Hospitalization");
+        databaseReferenceGuest = firebaseDatabase.getReference(old_age_home_name + "/Guest/Guests");
+        databaseReferenceHospital = firebaseDatabase.getReference(old_age_home_name + "/Hospital/Hospitals");
+        databaseReferenceHospitalization = firebaseDatabase.getReference(old_age_home_name + "/Hospitalization");
 
         // ############### Setting values to Guest Spinner ###############
         guests_name_list = new ArrayList<>();   // Created an ArrayList for guests' name
@@ -167,21 +172,24 @@ public class AddHospitalizationActivity extends AppCompatActivity {
         });
 
         // Getting last_hospitalization_id from Firebase Database
-        databaseReferenceHospitalization.child("last_hospitalization_id").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // Getting last_hospitalization_id from Firebase Database
-                ID id = dataSnapshot.getValue(ID.class);
-                if (id == null)
-                    hospitalization_id = 1;
-                else
-                    hospitalization_id = id.getId() + 1;
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(AddHospitalizationActivity.this, "" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        if (status) {
+            databaseReferenceHospitalization.child("last_hospitalization_id").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    // Getting last_hospitalization_id from Firebase Database
+                    ID id = dataSnapshot.getValue(ID.class);
+                    if (id == null)
+                        hospitalization_id = 1;
+                    else
+                        hospitalization_id = id.getId() + 1;
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Toast.makeText(AddHospitalizationActivity.this, "" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
 
         // Adding new medication
         btn.setOnClickListener(new View.OnClickListener() {
@@ -208,16 +216,18 @@ public class AddHospitalizationActivity extends AppCompatActivity {
                             Toast.makeText(AddHospitalizationActivity.this, "New Hospitalization Added", Toast.LENGTH_SHORT).show();
 
                             // Updating last_hospitalization_id on Firebase
-                            databaseReferenceHospitalization.child("last_hospitalization_id").setValue(new ID(hospitalization_id)).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void unused)
-                                {   }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(AddHospitalizationActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            });
+                            if (status) {
+                                databaseReferenceHospitalization.child("last_hospitalization_id").setValue(new ID(hospitalization_id)).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(AddHospitalizationActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
                             AddHospitalizationActivity.this.onBackPressed();    // going back on previous page
                         }
                     }).addOnFailureListener(new OnFailureListener() {

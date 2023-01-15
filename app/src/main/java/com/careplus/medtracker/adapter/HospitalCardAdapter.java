@@ -2,6 +2,7 @@ package com.careplus.medtracker.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,10 +37,18 @@ import java.util.ArrayList;
 public class HospitalCardAdapter extends RecyclerView.Adapter<HospitalCardAdapter.HospitalViewHolder> {
     Context context;
     ArrayList<Hospital> hospital_list;
+    SharedPreferences pref;
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference databaseReference;
 
     public HospitalCardAdapter(Context context, ArrayList<Hospital> hospital_list) {
         this.context = context;
         this.hospital_list = hospital_list;
+
+        pref = context.getSharedPreferences("login", Context.MODE_PRIVATE);
+        String old_age_home_name = pref.getString("old_age_home_name", "");
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference(old_age_home_name + "/Hospital");
     }
 
     // HospitalViewHolder is inner class & HospitalCardAdapter is outer class
@@ -48,9 +57,6 @@ public class HospitalCardAdapter extends RecyclerView.Adapter<HospitalCardAdapte
         ImageView imageView;
         ImageButton btn_edit, btn_more;
 
-        FirebaseDatabase firebaseDatabase;
-        DatabaseReference databaseReference;
-
         public HospitalViewHolder(@NonNull View itemView) {
             super(itemView);
             textView1 = itemView.findViewById(R.id.textView1);
@@ -58,9 +64,6 @@ public class HospitalCardAdapter extends RecyclerView.Adapter<HospitalCardAdapte
             imageView = itemView.findViewById(R.id.imageView);
             btn_edit = itemView.findViewById(R.id.button1);
             btn_more = itemView.findViewById(R.id.button2);
-
-            firebaseDatabase = FirebaseDatabase.getInstance();
-            databaseReference = firebaseDatabase.getReference("Hospital");
         }
     }
 
@@ -102,7 +105,7 @@ public class HospitalCardAdapter extends RecyclerView.Adapter<HospitalCardAdapte
                         {
                             //##################### Delete Button #####################
                             case R.id.item1:
-                                Query query = holder.databaseReference.child("Hospitals").orderByChild("hospitalID").equalTo(hospital.getHospitalID());
+                                Query query = databaseReference.child("Hospitals").orderByChild("hospitalID").equalTo(hospital.getHospitalID());
                                 query.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
