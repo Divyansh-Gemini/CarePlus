@@ -4,6 +4,8 @@ package com.careplus.medtracker;
 // Abhi idhr koi implementation nhi h
 // #################################################################################################
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +35,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -39,7 +43,7 @@ public class MedicationFragment extends Fragment {
     TextView textView;
     int dd, mm, yyyy;
     String date = "";
-    String month, month_date;
+    String month, month_date = "";
 
     RecyclerView recyclerView;
     FloatingActionButton fab;
@@ -81,7 +85,8 @@ public class MedicationFragment extends Fragment {
             date = "0";
         date += dd;
         month = months[mm].substring(0,3);
-        month_date = month + " " + date;
+        if (month_date.isEmpty())
+            month_date = month + " " + date;
 
         Intent intent = getActivity().getIntent();
         Bundle b = intent.getExtras();
@@ -137,6 +142,7 @@ public class MedicationFragment extends Fragment {
                             break;
                         default:
                             List dates = new ArrayList(medication.getDatesAndStatus().keySet());
+                            Collections.sort(dates);
                             Map<String, Boolean> dates_and_status = medication.getDatesAndStatus();
 
                             for (int i = 0; i < dates.size(); i++) {
@@ -150,6 +156,7 @@ public class MedicationFragment extends Fragment {
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getActivity(), "155", Toast.LENGTH_SHORT).show();
                 Toast.makeText(getActivity(),"" + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });

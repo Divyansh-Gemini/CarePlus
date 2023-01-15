@@ -69,10 +69,7 @@ public class MedicationCardAdapter extends RecyclerView.Adapter<MedicationCardAd
         TextView textView1, textView2, textView3;
         ImageView imageView;
         MaterialButton btn_taken, btn_edit, btn_more;
-
-        int dd, mm;
-        String date = "";
-        String month, month_date;
+        String month_date;
 
         public MedicationViewHolder(@NonNull View itemView) {
             super(itemView);
