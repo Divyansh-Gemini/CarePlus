@@ -278,6 +278,7 @@ public class SettingsFragment extends Fragment {
         Toast.makeText(getActivity(), "Alarm set successfully", Toast.LENGTH_SHORT).show();
     }
 
+
     public static String covertTimeFormat(int hours, int minutes)
     {
         String ampm = "PM";
