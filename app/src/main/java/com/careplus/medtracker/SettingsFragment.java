@@ -249,15 +249,13 @@ public class SettingsFragment extends Fragment {
         SetAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                     setAlarm();
-                }
             }
         });
         return myView;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.S)
+
     private void setAlarm() {
         AlarmManager alarmManager1 = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
         AlarmManager alarmManager2 = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
@@ -277,6 +275,7 @@ public class SettingsFragment extends Fragment {
 
         Toast.makeText(getActivity(), "Alarm set successfully", Toast.LENGTH_SHORT).show();
     }
+
 
     public static String covertTimeFormat(int hours, int minutes)
     {
