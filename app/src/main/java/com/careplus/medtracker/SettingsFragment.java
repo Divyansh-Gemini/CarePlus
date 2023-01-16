@@ -41,10 +41,11 @@ import java.util.Calendar;
 
 public class SettingsFragment extends Fragment {
     EditText editText1, editText2, editText3;
-    Button SetAlarm;
+    Button btn_setAlarm, btn_logout;
     int breakfast_hour, breakfast_minute, lunch_hour, lunch_minute, dinner_hour, dinner_minute;
 
     SharedPreferences pref;
+    SharedPreferences.Editor editor;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
 
@@ -60,8 +61,10 @@ public class SettingsFragment extends Fragment {
         editText1 = myView.findViewById(R.id.editText1);
         editText2 = myView.findViewById(R.id.editText2);
         editText3 = myView.findViewById(R.id.editText3);
-        SetAlarm=myView.findViewById(R.id.SetAlarm);
+        btn_setAlarm =myView.findViewById(R.id.SetAlarm);
+        btn_logout =myView.findViewById(R.id.button2);
         pref = getContext().getSharedPreferences("login", Context.MODE_PRIVATE);
+        editor = pref.edit();
         String old_age_home_name = pref.getString("old_age_home_name", "");
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference(old_age_home_name + "/MealsTime");
@@ -246,15 +249,30 @@ public class SettingsFragment extends Fragment {
             }
         });
 
-        SetAlarm.setOnClickListener(new View.OnClickListener() {
+        btn_setAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                     setAlarm();
             }
         });
+
+        btn_logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    // clearing app data
+                    Runtime runtime = Runtime.getRuntime();
+                    runtime.exec("pm clear com.careplus.medtracker");
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Toast.makeText(getActivity(), "Logged out successfully", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         return myView;
     }
-
 
     private void setAlarm() {
         AlarmManager alarmManager1 = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
@@ -276,7 +294,6 @@ public class SettingsFragment extends Fragment {
         Toast.makeText(getActivity(), "Alarm set successfully", Toast.LENGTH_SHORT).show();
     }
 
-
     public static String covertTimeFormat(int hours, int minutes)
     {
         String ampm = "PM";
@@ -293,70 +310,65 @@ public class SettingsFragment extends Fragment {
             time = hours + ":" + minutes + " " + ampm;
 
         return time;
-//       return ampm;
     }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void createNotificationMethod1() {
-        //this Particular Code will Create the Notification Channel
-            CharSequence name="CareplusReminderChannel";//name of the channel
-            String description="channel for Alarm Manager";//For what we have create the notification
-            int importance= NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel channel=new NotificationChannel("BreakFast",name,importance);
-            channel.setDescription(description);
-            channel.enableLights(true);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        // This Particular Code will Create the Notification Channel
+        CharSequence name = "CareplusReminderChannel";            // Name of the channel
+        String description = "channel for Alarm Manager";         // For what we have create the notification
+        int importance = NotificationManager.IMPORTANCE_HIGH;
+        NotificationChannel channel=new NotificationChannel("BreakFast", name, importance);
+        channel.setDescription(description);
+        channel.enableLights(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
             channel.canBubble();
-        }
         channel.canBypassDnd();
         channel.enableVibration(true);
         channel.getLockscreenVisibility();
         channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
         channel.enableLights(true);
         NotificationManager notificationManager=getContext().getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-
+        notificationManager.createNotificationChannel(channel);
     }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     public  void createNotificationMethod2() {
         //this Particular Code will Create the Notification Channel
-            CharSequence name="CareplusReminderChannel";//name of the channel
-            String description="channel for Alarm Manager";//For what we have create the notification
-            int importance= NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel channel=new NotificationChannel("Lunch",name,importance);
-            channel.setDescription(description);
+        CharSequence name = "CareplusRemindrChannel";             //name of the channel
+        String description = "channel for Alarm Manager";         //For what we have create the notification
+        int importance = NotificationManager.IMPORTANCE_HIGH;
+        NotificationChannel channel = new NotificationChannel("Lunch", name, importance);
+        channel.setDescription(description);
         channel.enableLights(true);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
             channel.canBubble();
-        }
         channel.canBypassDnd();
         channel.enableVibration(true);
         channel.getLockscreenVisibility();
         channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
         channel.enableLights(true);
-            NotificationManager notificationManager=getContext().getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-
+        NotificationManager notificationManager=getContext().getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannel(channel);
     }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     public  void createNotificationMethod3() {
-        //this Particular Code will Create the Notification Channel
-            CharSequence name="CareplusReminderChannel";//name of the channel
-            String description="channel for Alarm Manager";//For what we have create the notification
-            int importance= NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel channel=new NotificationChannel("Dinner",name,importance);
-            channel.setDescription(description);
+        // This Particular Code will Create the Notification Channel
+        CharSequence name = "CareplusReminderChannel";            // Name of the channel
+        String description = "channel for Alarm Manager";         // For what we have create the notification
+        int importance = NotificationManager.IMPORTANCE_HIGH;
+        NotificationChannel channel = new NotificationChannel("Dinner", name, importance);
+        channel.setDescription(description);
         channel.enableLights(true);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
             channel.canBubble();
-        }
         channel.canBypassDnd();
         channel.enableVibration(true);
         channel.getLockscreenVisibility();
         channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
         channel.enableLights(true);
-            NotificationManager notificationManager=getContext().getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-
+        NotificationManager notificationManager=getContext().getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannel(channel);
     }
-
 }

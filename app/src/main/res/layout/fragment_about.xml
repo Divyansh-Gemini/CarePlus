@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10sp"
@@ -31,11 +31,24 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
     <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/divider"
         android:layout_width="200sp"
         android:layout_height="wrap_content"
         android:layout_marginTop="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintTop_toBottomOf="@+id/textView1" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100sp"
+        android:textSize="18sp"
+        android:fontFamily="@font/signika_medium"
+        android:text="Developers: \n\n- Aishwary Kumar Rai \n- Divyansh Gemini \n- Nishant Chaturvedi \n- Yash Verma"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

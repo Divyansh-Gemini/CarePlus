@@ -103,13 +103,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="30sp"
-            android:text="Set Alarm"
             android:fontFamily="@font/signika_medium"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="Set Alarm"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="350sp"
+            android:text="Logout"
+            android:backgroundTint="@color/md_theme_dark_onError"
+            android:textColor="@color/white"
+            android:fontFamily="@font/signika_medium"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/SetAlarm"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>
