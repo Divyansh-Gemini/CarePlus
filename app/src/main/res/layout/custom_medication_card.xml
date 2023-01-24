@@ -38,7 +38,7 @@
 
                 <TextView
                     android:id="@+id/textView1"
-                    android:text="Guest name"
+                    android:text="Prabhuji name"
                     android:textSize="20sp"
                     android:layout_marginTop="5sp"
                     android:textColor="@color/black"

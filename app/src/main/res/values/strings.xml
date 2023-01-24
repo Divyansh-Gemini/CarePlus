@@ -9,7 +9,8 @@
     <string name="action_settings">Settings</string>
 
     <string name="menu_home">Home</string>
-    <string name="menu_guests">Guests</string>
+<!--    <string name="menu_guests">Guests</string>-->
+    <string name="menu_guests">Prabhuji</string>
     <string name="menu_medicines">Medicines</string>
     <string name="menu_hospitals">Hospitals</string>
     <string name="menu_settings">Settings</string>
@@ -22,7 +23,8 @@
     <string name="new_medication">New Medication</string>
     <string name="new_hospital">New hospital</string>
     <string name="new_medicine">New Medicine</string>
-    <string name="new_guest">New guest</string>
+<!--    <string name="new_guest">New guest</string>-->
+    <string name="new_guest">New prabhuji</string>
 
     <string-array name="medicine_types">
         <item>--Select medicine type--</item>

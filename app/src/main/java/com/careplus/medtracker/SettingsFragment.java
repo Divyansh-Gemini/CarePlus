@@ -1,9 +1,5 @@
 package com.careplus.medtracker;
 
-// #################################################################################################
-// Abhi idhr koi implementation nhi h
-// #################################################################################################
-
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -132,6 +128,24 @@ public class SettingsFragment extends Fragment {
             }
         });
 
+        calender1 = Calendar.getInstance();
+        calender1.set(Calendar.HOUR_OF_DAY, breakfast_hour);
+        calender1.set(Calendar.MINUTE, breakfast_minute);
+        calender1.set(Calendar.SECOND, 0);
+        calender1.set(Calendar.MILLISECOND, 0);
+
+        calender2 = Calendar.getInstance();
+        calender2.set(Calendar.HOUR_OF_DAY, lunch_hour);
+        calender2.set(Calendar.MINUTE, lunch_minute);
+        calender2.set(Calendar.SECOND, 0);
+        calender2.set(Calendar.MILLISECOND, 0);
+
+        calender3 = Calendar.getInstance();
+        calender3.set(Calendar.HOUR_OF_DAY, dinner_hour);
+        calender3.set(Calendar.MINUTE, dinner_minute);
+        calender3.set(Calendar.SECOND, 0);
+        calender3.set(Calendar.MILLISECOND, 0);
+
         editText1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -147,11 +161,8 @@ public class SettingsFragment extends Fragment {
                     public void onClick(View view) {
                         editText1.setText(SettingsFragment.covertTimeFormat(timePicker.getHour(), timePicker.getMinute()));
                         //Os Din Particular time Ko set Karva lega
-                        calender1 = Calendar.getInstance();
                         calender1.set(Calendar.HOUR_OF_DAY,timePicker.getHour());
                         calender1.set(Calendar.MINUTE,timePicker.getMinute());
-                        calender1.set(Calendar.SECOND,0);
-                        calender1.set(Calendar.MILLISECOND,0);
                         breakfast_hour = timePicker.getHour();
                         breakfast_minute = timePicker.getMinute();
                         MealsTime mealsTime = new MealsTime(breakfast_hour, breakfast_minute);
@@ -168,7 +179,6 @@ public class SettingsFragment extends Fragment {
 
                     }
                 });
-
             }
         });
 
@@ -187,11 +197,8 @@ public class SettingsFragment extends Fragment {
                     public void onClick(View view) {
                         editText2.setText(SettingsFragment.covertTimeFormat(timePicker.getHour(), timePicker.getMinute()));
                         //Os Din Particular time Ko set Karva lega
-                        calender2= Calendar.getInstance();
                         calender2.set(Calendar.HOUR_OF_DAY,timePicker.getHour());
                         calender2.set(Calendar.MINUTE,timePicker.getMinute());
-                        calender2.set(Calendar.SECOND,0);
-                        calender2.set(Calendar.MILLISECOND,0);
                         lunch_hour = timePicker.getHour();
                         lunch_minute = timePicker.getMinute();
                         MealsTime mealsTime = new MealsTime(lunch_hour, lunch_minute);
@@ -205,7 +212,6 @@ public class SettingsFragment extends Fragment {
                                 Toast.makeText(getActivity(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         });
-
                     }
                 });
             }
@@ -226,11 +232,8 @@ public class SettingsFragment extends Fragment {
                     public void onClick(View view) {
                         editText3.setText(SettingsFragment.covertTimeFormat(timePicker.getHour(), timePicker.getMinute()));
                         //Os Din Particular time Ko set Karva lega
-                        calender3= Calendar.getInstance();
                         calender3.set(Calendar.HOUR_OF_DAY,timePicker.getHour());
                         calender3.set(Calendar.MINUTE,timePicker.getMinute());
-                        calender3.set(Calendar.SECOND,0);
-                        calender3.set(Calendar.MILLISECOND,0);
                         dinner_hour = timePicker.getHour();
                         dinner_minute = timePicker.getMinute();
                         MealsTime mealsTime = new MealsTime(dinner_hour, dinner_minute);
