@@ -11,6 +11,7 @@ package com.careplus.medtracker.model;
 
 public class Guest {
     int guestID;
+    String guest_image_uri;
     String guestName;
     int guestAge;
     String guestGender;
@@ -24,10 +25,11 @@ public class Guest {
     {   }
 
     // Parameterized constructor
-    public Guest(int guestID, String guestName, int guestAge, String guestGender,
+    public Guest(int guestID, String guest_image_uri, String guestName, int guestAge, String guestGender,
                  String guestDateOfAdmit, String guestKnownName, String guestKnownNumber,
                  String guestAddress) {
         this.guestID = guestID;
+        this.guest_image_uri = guest_image_uri;
         this.guestName = guestName;
         this.guestAge = guestAge;
         this.guestGender = guestGender;
@@ -43,6 +45,14 @@ public class Guest {
 
     public void setGuestID(int guestID) {
         this.guestID = guestID;
+    }
+
+    public String getGuestImageURI() {
+        return guest_image_uri;
+    }
+
+    public void setGuestImageURI(String guest_image_uri) {
+        this.guest_image_uri = guest_image_uri;
     }
 
     public String getGuestName() {

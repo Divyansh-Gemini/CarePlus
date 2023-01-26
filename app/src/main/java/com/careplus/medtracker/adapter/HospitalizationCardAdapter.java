@@ -3,6 +3,8 @@ package com.careplus.medtracker.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,12 +25,16 @@ import com.careplus.medtracker.R;
 import com.careplus.medtracker.model.Guest;
 import com.careplus.medtracker.model.Hospital;
 import com.careplus.medtracker.model.Hospitalization;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
@@ -90,6 +96,24 @@ public class HospitalizationCardAdapter extends RecyclerView.Adapter<Hospitaliza
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Guest guest = dataSnapshot.getValue(Guest.class);
+
+                // Getting guest_image from Firebase Cloud Storage and setting it to the imageView
+                StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+                StorageReference photoReference = storageReference.child("guest_images/guest_" + guest.getGuestID() + "_" + guest.getGuestName().replace(" ", "_") + ".jpg");
+                final long ONE_MEGABYTE = 1024 * 1024 * 4;
+                photoReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                    @Override
+                    public void onSuccess(byte[] bytes) {
+                        Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                        holder.imageView.setImageBitmap(bmp);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        Toast.makeText(context.getApplicationContext(), "" + exception.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+
                 holder.textView1.setText(guest.getGuestName());
             }
             @Override
