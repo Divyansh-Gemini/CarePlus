@@ -26,7 +26,7 @@
 
         <TextView
             android:id="@+id/textView1"
-            android:text="Select Prabhuji"
+            android:text="Select Guest"
             android:textSize="17sp"
             android:layout_width="300sp"
             android:layout_height="wrap_content"
