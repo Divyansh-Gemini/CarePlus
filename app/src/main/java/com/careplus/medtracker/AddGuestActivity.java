@@ -5,11 +5,19 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.DatePicker;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -30,6 +38,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.Calendar;
 
@@ -40,12 +50,15 @@ public class AddGuestActivity extends AppCompatActivity {
     TextView textViewGender;
     RadioButton radio_btn_male, radio_btn_female;
     MaterialButton btn;
+    ImageButton btn_img;
     int guest_id;
+    Uri imageURI = null;
     boolean status = true;     // if new data then true, if updation then false
 
     SharedPreferences pref;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
+    StorageReference storageReference;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -64,11 +77,13 @@ public class AddGuestActivity extends AppCompatActivity {
         editText5 = findViewById(R.id.editText5);
         editText6 = findViewById(R.id.editText6);
         btn = findViewById(R.id.button);
+        btn_img = findViewById(R.id.button1);
 
         pref = getSharedPreferences("login", Context.MODE_PRIVATE);
         String old_age_home_name = pref.getString("old_age_home_name", "");
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference(old_age_home_name + "/Guest");
+        storageReference = FirebaseStorage.getInstance().getReference();
 
         // Getting guest_id from GuestCardAdapter.java on clicking edit button
         // And filling it to TextFields
@@ -214,5 +229,59 @@ public class AddGuestActivity extends AppCompatActivity {
                 }
             }
         });
+
+        btn_img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Dialog dlg = new Dialog(AddGuestActivity.this);
+                dlg.setContentView(R.layout.custom_dialog_camera_gallery);
+                dlg.setCanceledOnTouchOutside(false);
+                dlg.show();
+
+                ImageButton btn_cam = dlg.findViewById(R.id.imageButton1);
+                ImageButton btn_gal = dlg.findViewById(R.id.imageButton2);
+
+                btn_cam.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Opening Camera using Intent
+                        Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        Uri imagePath = createImage();
+                        i.putExtra(MediaStore.EXTRA_OUTPUT, imagePath);
+                        startActivityForResult(i, 101);
+                        dlg.dismiss();
+                    }
+                });
+
+                btn_gal.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Opening Gallery using Intent
+                        Intent i = new Intent();
+                        i.setType("image/*");
+                        i.setAction(Intent.ACTION_GET_CONTENT);
+                        startActivityForResult(i, 102);
+                        dlg.dismiss();
+                    }
+                });
+            }
+        });
+    }
+
+    private Uri createImage()
+    {   // Storing the image captured by Camera at "Pictures/CIC_Labs_India/Marking_of_Bags/" so that we can get its URI
+
+        ContentResolver resolver = getApplicationContext().getContentResolver();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+            imageURI = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY);
+        else
+            imageURI = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(MediaStore.Images.Media.DISPLAY_NAME, "IMG_" + System.currentTimeMillis() + ".jpg");
+        contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/" + "CIC Labs India/" + "Marking of Bags/");
+
+        imageURI = resolver.insert(imageURI, contentValues);
+        return imageURI;
     }
 }
