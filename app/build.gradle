@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace 'com.careplus.medtracker'
-    compileSdk 32
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.careplus.medtracker"
         minSdk 23
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -33,17 +33,17 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'com.google.android.material:material:1.7.0'         // Material UI
-    implementation 'com.google.firebase:firebase-database:20.1.0'       // Firebase Database
-    implementation 'com.google.firebase:firebase-auth:21.1.0'       // Firebase Authentication
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'    // DO NOT UPDATE  |  Working perfect at 2.5.1
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'   // DO NOT UPDATE  |  Working perfect at 2.5.1
+    implementation 'androidx.navigation:navigation-fragment:2.7.5'
+    implementation 'androidx.navigation:navigation-ui:2.7.5'
+    implementation 'com.google.android.material:material:1.10.0'        // Material UI
+    implementation 'com.google.firebase:firebase-auth:22.3.0'           // Firebase Authentication
+    implementation 'com.google.firebase:firebase-database:20.3.0'       // Firebase Realtime Database
+    implementation 'com.google.firebase:firebase-storage:20.3.0'        // Firebase Storage
     implementation 'com.android.volley:volley:1.2.1'                    // Volley library for using API
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
-    implementation 'androidx.navigation:navigation-fragment:2.5.3'
-    implementation 'androidx.navigation:navigation-ui:2.5.3'
-    implementation 'com.google.firebase:firebase-storage:20.1.0'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

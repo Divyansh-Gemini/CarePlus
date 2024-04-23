@@ -59,15 +59,19 @@ public class SettingsFragment extends Fragment {
         editText3 = myView.findViewById(R.id.editText3);
         btn_setAlarm =myView.findViewById(R.id.SetAlarm);
         btn_logout =myView.findViewById(R.id.button2);
+
+
         pref = getContext().getSharedPreferences("login", Context.MODE_PRIVATE);
         editor = pref.edit();
         String old_age_home_name = pref.getString("old_age_home_name", "");
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference(old_age_home_name + "/MealsTime");
+        
         Calendar ca = Calendar.getInstance();
         createNotificationMethod1();
         createNotificationMethod2();
         createNotificationMethod3();
+        
         databaseReference.child("breakfast_time").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
